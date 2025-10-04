@@ -1,34 +1,34 @@
 package org.dd.bre.Service;
 
+import lombok.RequiredArgsConstructor;
+import org.dd.bre.Dto.ProductDTO;
+import org.dd.bre.Dto.ProductDetailsDto;
 import org.dd.bre.Exception.ProductNotFoundException;
+import org.dd.bre.Mapper.ProductDetailsMapper;
+import org.dd.bre.Mapper.ProductMapper;
 import org.dd.bre.Repo.CategoryRepo;
 import org.dd.bre.Repo.ProductRepo;
-import org.dd.bre.Repo.ReviewRepo;
 import org.dd.bre.model.*;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepo productRepo;
     private final CategoryRepo categoryRepo;
-    private final ReviewRepo reviewRepo;
+    private final ProductMapper productMapper;
+    private final ProductDetailsMapper productDetailsMapper;
 
-    public ProductService(ProductRepo productRepo, CategoryRepo categoryRepo, ReviewRepo reviewRepo) {
-        this.productRepo = productRepo;
-        this.categoryRepo = categoryRepo;
-        this.reviewRepo = reviewRepo;
-    }
 
-    public Product getProductByName(String productName) {
+    public ProductDetailsDto getProductByName(String productName) {
         Product product = productRepo.findByProductName(productName);
         if (product == null) {
             throw new ProductNotFoundException("Product not found: " + productName);
         }
-        return product;
+        return productDetailsMapper.mapToProductDTO(product);
     }
 
     public List<ProductDTO> getAllProducts() {
@@ -37,18 +37,18 @@ public class ProductService {
             throw new ProductNotFoundException("No products found");
         }
         return products.stream()
-                .map(this::mapToProductDTO)
+                .map(productMapper::mapToProductDTO)
                 .toList();
     }
 
     protected List<ProductDTO> getAllProductsByWishList(List<WishList> wishLists) {
-        List<Integer> in = wishLists.stream().map(WishList::getId).toList();
+        List<Long> in = wishLists.stream().map(WishList::getId).toList();
         List<Product> products = productRepo.findAllByWishLists_IdIn(in);
         if (products.isEmpty()) {
-            throw new ProductNotFoundException("No products found");
+            return new ArrayList<>();
         }
         return products.stream()
-                .map(this::mapToProductDTO)
+                .map(productMapper::mapToProductDTO)
                 .toList();
     }
 
@@ -60,38 +60,39 @@ public class ProductService {
 
         List<Product> products = productRepo.findAllByCategory(category);
         if (products.isEmpty()) {
-            throw new ProductNotFoundException("No products found for category: " + categoryName);
+            return new ArrayList<>();
         }
         return products.stream()
-                .map(this::mapToProductDTO)
+                .map(productMapper::mapToProductDTO)
                 .toList();
     }
 
 
-    private ProductDTO mapToProductDTO(Product product) {
-
-        String imageUrl = product.getProductVariants().stream()
-                .flatMap(variant -> variant.getImages().stream())
-                .map(Image::getUrl)
-                .findFirst()
-                .orElse("default-image.png");
-
-        BigDecimal price = product.getProductVariants().stream()
-                .map(ProductVariant::getPrice)
-                .min(BigDecimal::compareTo)
-                .orElse(BigDecimal.ZERO);
-
-        Integer reviewCount = reviewRepo.countReviewsByProduct(product);
-        Double avgRating = reviewRepo.findAverageRatingByProduct(product);
-
-        return new ProductDTO(
-                product.getProductName(),
-                imageUrl,
-                price,
-                reviewCount,
-                avgRating != null ? avgRating : 0.0
-        );
-
+    public List<ProductDTO> getAllProductsAsc(){
+        List<Product> products = productRepo.findAllAsc();
+        if (products.isEmpty()) {
+            throw new ProductNotFoundException("No products found");
+        }
+        return products.stream()
+                .map(productMapper::mapToProductDTO)
+                .toList();
     }
-
+    public List<ProductDTO> getAllProductsDesc(){
+        List<Product> products = productRepo.findAllDesc();
+        if (products.isEmpty()) {
+            throw new ProductNotFoundException("No products found");
+        }
+        return products.stream()
+                .map(productMapper::mapToProductDTO)
+                .toList();
+    }
+    public List<ProductDTO> getAllProductsHighRate(){
+        List<Product> products = productRepo.findAllByHighRate();
+        if (products.isEmpty()) {
+            throw new ProductNotFoundException("No products found");
+        }
+        return products.stream()
+                .map(productMapper::mapToProductDTO)
+                .toList();
+    }
 }

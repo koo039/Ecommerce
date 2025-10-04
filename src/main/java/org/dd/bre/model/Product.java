@@ -1,9 +1,12 @@
 package org.dd.bre.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,7 +19,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "product_name", nullable = false)
     private String productName;
@@ -24,10 +27,18 @@ public class Product {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "created_at")
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
+
+    @Column(name = "original_price", precision = 10, scale = 2)
+    private BigDecimal originalPrice;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @UpdateTimestamp
+    @Column(name = "updated_at",nullable = false)
     private LocalDateTime updatedAt;
 
     @ManyToOne
@@ -35,16 +46,14 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant>  productVariants;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product")
     private List<WishList> wishLists;
-
-
 
 }

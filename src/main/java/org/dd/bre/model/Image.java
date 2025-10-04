@@ -2,6 +2,7 @@ package org.dd.bre.model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,13 +17,13 @@ public class Image {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String url;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIgnore
     @JoinColumn(name = "variant_id", nullable = false)
     private ProductVariant productVariant;
 }

@@ -2,10 +2,16 @@ package org.dd.bre.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 @Entity
-@Table(name = "cart_items")
+@Table(
+        name = "cart_items",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"cart_id", "variant_id"})
+        }
+)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,10 +19,11 @@ public class CartItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
-    private Integer quantity = 1;
+    @Min(1)
+    private Integer quantity;
 
     @JsonBackReference
     @ManyToOne

@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
-
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,7 +18,7 @@ public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(length = 500)
     private String comment;
@@ -27,13 +28,15 @@ public class Review {
     @Column(nullable = false)
     private Integer rate;
 
-    @Column(name = "created_at")
+    @CreationTimestamp
+    @Column(name = "created_at",nullable = false,updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @UpdateTimestamp
+    @Column(name = "updated_at",nullable = false)
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;

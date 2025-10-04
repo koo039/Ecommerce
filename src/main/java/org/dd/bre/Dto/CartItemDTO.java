@@ -1,12 +1,12 @@
-package org.dd.bre.model;
+package org.dd.bre.Dto;
 
 import java.math.BigDecimal;
-
 public record CartItemDTO (
+        Long id,
         Integer quantity,
         String productName,
         String imageUrl,
         BigDecimal price,
-        Size size,
-        Color color
+        String size,
+        String color
 ){}

@@ -12,65 +12,223 @@ INSERT INTO categories (category_name)
 VALUES
     ('Dresses'),
     ('Shoes'),
-    ('Accessories'),
+    ('Abayas'),
     ('Bags'),
     ('Jackets'),
-    ('Watches'),
-    ('Beauty'),
+    ('Hijabs'),
+    ('Jilbabs'),
     ('Sportswear'),
-    ('Electronics'),
+    ('Long Skirts'),
     ('Home & Kitchen');
 
-INSERT INTO products (product_name, description, created_at, updated_at, category_id)
+
+
+
+
+-- Dresses
+INSERT INTO products (product_name, description, created_at, updated_at, category_id, price, original_price)
 VALUES
-    ('Summer Dress', 'Light cotton summer dress with floral pattern.', NOW(), NOW(), 1),
-    ('Evening Gown', 'Elegant gown for formal events.', NOW(), NOW(), 1),
-    ('Running Shoes', 'Comfortable running shoes with breathable mesh.', NOW(), NOW(), 2),
-    ('Leather Boots', 'High-quality leather boots for winter.', NOW(), NOW(), 2),
-    ('Smartwatch', 'Fitness tracking smartwatch with heart rate monitor.', NOW(), NOW(), 6),
-    ('Luxury Watch', 'Premium watch with sapphire glass.', NOW(), NOW(), 6),
-    ('Backpack', 'Durable backpack for daily use.', NOW(), NOW(), 4),
-    ('Handbag', 'Stylish handbag made of genuine leather.', NOW(), NOW(), 4),
-    ('Sports Jacket', 'Lightweight jacket suitable for outdoor activities.', NOW(), NOW(), 5),
-    ('Casual Jacket', 'Trendy denim jacket.', NOW(), NOW(), 5),
-    ('Blender', 'High-speed blender for smoothies.', NOW(), NOW(), 10),
-    ('Coffee Maker', 'Automatic coffee machine with grinder.', NOW(), NOW(), 10),
-    ('Lipstick Set', 'Collection of matte lipsticks.', NOW(), NOW(), 7),
-    ('Perfume', 'Luxury fragrance for women.', NOW(), NOW(), 7),
-    ('Laptop', 'Lightweight laptop with SSD storage.', NOW(), NOW(), 9),
-    ('Smartphone', 'Latest smartphone with OLED display.', NOW(), NOW(), 9);
+    ('Floral Summer Dress', 'Lightweight modest summer dress with floral patterns.', NOW(), NOW(), 1, 39.99, null),
+    ('Evening Maxi Dress', 'Elegant long sleeve maxi dress for events.', NOW(), NOW(), 1, 59.99, 79.99);
 
-INSERT INTO product_variants (sku, size, color, price, stock_qty, product_id)
+INSERT INTO product_variants (sku, size, color, stock_qty, product_id)
 VALUES
-    -- Variants for Summer Dress (product_id = 1)
-    ('DRS-001-S-RED', 'S', 'RED', 39.99, 50, 1),
-    ('DRS-001-M-RED', 'M', 'RED', 39.99, 60, 1),
-    ('DRS-001-L-BLUE', 'L', 'BLUE', 42.99, 40, 1),
+    ('DRS-001-S-BLUE', 'S', 'RED', 5, 1),
+    ('DRS-001-M-BLUE', 'M', 'RED', 40, 1),
+    ('DRS-001-L-PINK', 'L', 'PINK', 20, 1),
+    ('DRS-002-M-BLACK', 'M', 'BLACK', 25, 2),
+    ('DRS-002-L-BLACK', 'L', 'BLACK', 20, 2);
 
-    -- Variants for Evening Gown (product_id = 2)
-    ('GWN-002-M-BLACK', 'M', 'BLACK', 89.99, 25, 2),
-    ('GWN-002-L-BLACK', 'L', 'BLACK', 89.99, 20, 2),
+-- Shoes
+INSERT INTO products (product_name, description, created_at, updated_at, category_id, price, original_price)
+VALUES
+    ('Running Sneakers', 'Comfortable sneakers with breathable mesh.', NOW(), NOW(), 2, 49.99, 69.99),
+    ('Leather Sandals', 'Soft leather sandals with adjustable straps.', NOW(), NOW(), 2, 29.99, null);
 
-    -- Variants for Running Shoes (product_id = 3)
-    ('SHO-003-40-WHITE', 'M', 'WHITE', 59.99, 80, 3),
-    ('SHO-003-41-BLACK', 'M', 'BLACK', 59.99, 70, 3),
-    ('SHO-003-42-BLUE', 'L', 'BLUE', 64.99, 65, 3),
+INSERT INTO product_variants (sku, size, color, stock_qty, product_id)
+VALUES
+    ('SHO-001-38-WHITE', '38', 'WHITE', 50, 3),
+    ('SHO-001-39-BLACK', '39', 'BLACK', 40, 3),
+    ('SHO-001-40-BLUE', '40', 'BLUE', 35, 3),
+    ('SHO-002-38-BROWN', '38', 'BROWN', 30, 4),
+    ('SHO-002-39-BROWN', '39', 'BROWN', 20, 4);
 
-    -- Variants for Leather Boots (product_id = 4)
-    ('BOO-004-41-BROWN', 'M', 'BROWN', 120.00, 30, 4),
-    ('BOO-004-42-BLACK', 'L', 'BLACK', 125.00, 25, 4),
+-- Abayas
+INSERT INTO products (product_name, description, created_at, updated_at, category_id, price, original_price)
+VALUES
+    ('Classic Black Abaya', 'Simple elegant abaya with wide sleeves.', NOW(), NOW(), 3, 45.00, 55.00),
+    ('Open Front Abaya', 'Modern open front abaya with belt.', NOW(), NOW(), 3, 60.00, 75.00);
 
-    -- Variants for Smartwatch (product_id = 5)
-    ('SWT-005-STD-BLACK', 'M', 'BLACK', 199.99, 100, 5),
-    ('SWT-005-STD-SILVER', 'M', 'WHITE', 209.99, 90, 5),
+INSERT INTO product_variants (sku, size, color, stock_qty, product_id)
+VALUES
+    ('ABA-001-S-BLACK', 'S', 'BLACK', 40, 5),
+    ('ABA-001-M-BLACK', 'M', 'BLACK', 35, 5),
+    ('ABA-001-L-BLACK', 'L', 'BLACK', 20, 5),
+    ('ABA-002-M-BEIGE', 'M', 'BEIGE', 25, 6),
+    ('ABA-002-L-NAVY', 'L', 'NAVY', 30, 6);
 
-    -- Variants for Luxury Watch (product_id = 6)
-    ('LWX-006-STD-GOLD', 'M', 'RED', 899.99, 15, 6),
-    ('LWX-006-STD-SILVER', 'M', 'WHITE', 799.99, 20, 6),
+-- Bags
+INSERT INTO products (product_name, description, created_at, updated_at, category_id, price, original_price)
+VALUES
+    ('Leather Handbag', 'Premium leather handbag with metal handle.', NOW(), NOW(), 4, 120.00, 150.00),
+    ('Casual Backpack', 'Durable backpack for everyday use.', NOW(), NOW(), 4, 49.99, 59.99);
 
-    -- Variants for Backpack (product_id = 7)
-    ('BKP-007-S-BLACK', 'M', 'BLACK', 49.99, 120, 7),
-    ('BKP-007-L-GREEN', 'L', 'GREEN', 59.99, 100, 7);
+INSERT INTO product_variants (sku, size, color, stock_qty, product_id)
+VALUES
+    ('BAG-001-STD-BLACK', 'STD', 'BLACK', 20, 7),
+    ('BAG-001-STD-BROWN', 'STD', 'BROWN', 15, 7),
+    ('BAG-002-STD-GREEN', 'STD', 'GREEN', 25, 8),
+    ('BAG-002-STD-BLUE', 'STD', 'BLUE', 20, 8);
+
+-- Jackets
+INSERT INTO products (product_name, description, created_at, updated_at, category_id, price, original_price)
+VALUES
+    ('Denim Jacket', 'Classic blue denim jacket.', NOW(), NOW(), 5, 55.00, 69.99),
+    ('Long Coat', 'Winter coat with modest cut.', NOW(), NOW(), 5, 89.99, 109.99);
+
+INSERT INTO product_variants (sku, size, color, stock_qty, product_id)
+VALUES
+    ('JCK-001-S-BLUE', 'S', 'BLUE', 15, 9),
+    ('JCK-001-M-BLUE', 'M', 'BLUE', 10, 9),
+    ('JCK-002-M-GREY', 'M', 'GREY', 12, 10),
+    ('JCK-002-L-BLACK', 'L', 'BLACK', 8, 10);
+
+-- Hijabs
+INSERT INTO products (product_name, description, created_at, updated_at, category_id, price, original_price)
+VALUES
+    ('Chiffon Hijab', 'Light chiffon hijab, easy to style.', NOW(), NOW(), 6, 12.99, null),
+    ('Jersey Hijab', 'Stretchable jersey hijab for daily wear.', NOW(), NOW(), 6, 14.99, 19.99);
+
+INSERT INTO product_variants (sku, size, color, stock_qty, product_id)
+VALUES
+    ('HJB-001-STD-BEIGE', 'STD', 'BEIGE', 100, 11),
+    ('HJB-001-STD-BLACK', 'STD', 'BLACK', 80, 11),
+    ('HJB-002-STD-GREEN', 'STD', 'GREEN', 60, 12),
+    ('HJB-002-STD-BLUE', 'STD', 'BLUE', 70, 12);
+
+-- Jilbabs
+INSERT INTO products (product_name, description, created_at, updated_at, category_id, price, original_price)
+VALUES
+    ('One Piece Jilbab', 'Full coverage one-piece jilbab.', NOW(), NOW(), 7, 50.00, 65.00),
+    ('Two Piece Jilbab', 'Two-piece jilbab with khimar and skirt.', NOW(), NOW(), 7, 55.00, 70.00);
+
+INSERT INTO product_variants (sku, size, color, stock_qty, product_id)
+VALUES
+    ('JLB-001-M-NAVY', 'M', 'NAVY', 30, 13),
+    ('JLB-001-L-BLACK', 'L', 'BLACK', 25, 13),
+    ('JLB-002-M-GREY', 'M', 'GREY', 20, 14),
+    ('JLB-002-L-BROWN', 'L', 'BROWN', 18, 14);
+
+-- Sportswear
+INSERT INTO products (product_name, description, created_at, updated_at, category_id, price, original_price)
+VALUES
+    ('Modest Tracksuit', 'Comfortable full-length tracksuit for women.', NOW(), NOW(), 8, 39.99, 49.99),
+    ('Long Sleeve Sports Top', 'Breathable modest sports top.', NOW(), NOW(), 8, 24.99, 29.99);
+
+INSERT INTO product_variants (sku, size, color, stock_qty, product_id)
+VALUES
+    ('SPT-001-S-BLACK', 'S', 'BLACK', 20, 15),
+    ('SPT-001-M-GREY', 'M', 'GREY', 15, 15),
+    ('SPT-002-M-WHITE', 'M', 'WHITE', 30, 16),
+    ('SPT-002-L-BLUE', 'L', 'BLUE', 25, 16);
+
+-- Long Skirts
+INSERT INTO products (product_name, description, created_at, updated_at, category_id, price, original_price)
+VALUES
+    ('Pleated Long Skirt', 'Elegant pleated skirt for modest look.', NOW(), NOW(), 9, 29.99, 39.99),
+    ('Denim Maxi Skirt', 'Casual denim maxi skirt.', NOW(), NOW(), 9, 34.99, 44.99);
+
+INSERT INTO product_variants (sku, size, color, stock_qty, product_id)
+VALUES
+    ('SKT-001-S-BEIGE', 'S', 'BEIGE', 22, 17),
+    ('SKT-001-M-BEIGE', 'M', 'BEIGE', 18, 17),
+    ('SKT-002-M-BLUE', 'M', 'BLUE', 15, 18),
+    ('SKT-002-L-BLUE', 'L', 'BLUE', 12, 18);
+
+-- Home & Kitchen
+INSERT INTO products (product_name, description, created_at, updated_at, category_id, price, original_price)
+VALUES
+    ('Ceramic Tea Set', 'Elegant tea set for guests.', NOW(), NOW(), 10, 49.99, 59.99),
+    ('Prayer Mat', 'Soft prayer mat with geometric design.', NOW(), NOW(), 10, 19.99, 25.00);
+
+INSERT INTO product_variants (sku, size, color, stock_qty, product_id)
+VALUES
+    ('HMK-001-STD-WHITE', 'STD', 'WHITE', 10, 19),
+    ('HMK-001-STD-GOLD', 'STD', 'GOLD', 8, 19),
+    ('HMK-002-STD-GREEN', 'STD', 'GREEN', 40, 20),
+    ('HMK-002-STD-BLUE', 'STD', 'BLUE', 35, 20);
+
+
+INSERT INTO carts (created_at,updated_at,user_id) VALUES
+    (NOW(),NOW(),1),
+    (NOW(),NOW(),2),
+    (NOW(),NOW(),3),
+    (NOW(),NOW(),4);-- Cart for User 1
+
+
+INSERT INTO cart_items (quantity, cart_id, variant_id) VALUES
+                                                           -- Cart 1 (User 1’s active cart)
+   (2, 1, 1),  -- 2x Summer Dress (variant 1)
+   (1, 1, 6),  -- 1x Running Shoes (variant 6)
+
+   -- Cart 2 (User 2’s cart)
+   (3, 2, 7),  -- 3x Running Shoes (variant 7)
+   (1, 2, 11), -- 1x Smartwatch (variant 11)
+
+   -- Cart 3 (User 3’s cart)
+   (1, 3, 9),  -- 1x Leather Boots (variant 9)
+   (2, 3, 15), -- 2x Backpack (variant 15)
+
+   -- Cart 4 (User 1’s old cart)
+   (1, 4, 4),  -- 1x Evening Gown (variant 4)
+   (2, 4, 2); -- 2x Backpack (variant 16)
+
+
+INSERT INTO wishlists (created_at, updated_at, user_id, product_id) VALUES
+                                                                        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 1),
+                                                                        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 5),
+                                                                        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2, 3),
+                                                                        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3, 1),
+                                                                        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3, 4);
+INSERT INTO images (url, variant_id) VALUES
+('https://images.unsplash.com/photo-1655994688032-67a1b6474cf3', 1),
+('https://images.unsplash.com/photo-1621167478060-296b5ef19e5b', 1),
+('https://images.unsplash.com/photo-1655994688032-67a1b6474cf3', 2),
+('https://images.unsplash.com/photo-1621167478060-296b5ef19e5b', 2),
+('https://images.unsplash.com/photo-1609741873312-7ce5ae7c56b4?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',3),
+
+('https://plus.unsplash.com/premium_photo-1661494087536-cdba32f3a2cc', 5),
+
+('https://images.unsplash.com/photo-1730454809551-58c6afadec4c?q=80&w=686&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 28),
+('https://images.unsplash.com/photo-1618407961072-5afd4ea27e41?q=80&w=721&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 30),
+
+('https://images.unsplash.com/photo-1619253341026-74c609e6ce50?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 6),
+
+('https://images.unsplash.com/photo-1659080546824-36c72edd5ef9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fENoaWZmb24lMjBIaWphYnxlbnwwfHwwfHx8MA%3D%3D', 24),
+('https://images.unsplash.com/photo-1625987306773-8b9e554b25e2?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 26),
+
+('https://images.unsplash.com/photo-1741783895531-ccc860eb946a?q=80&w=1025&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 9),
+('https://picsum.photos/seed/product10/600/400', 10),
+('https://images.unsplash.com/photo-1752794966299-1fd0ccade152?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Q2xhc3NpYyUyMEJsYWNrJTIwQWJheWF8ZW58MHx8MHx8fDA%3D', 11),
+
+('https://images.unsplash.com/photo-1559278079-0bbb5e183b3d?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 32),
+('https://images.unsplash.com/photo-1615387087938-312a574f825f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 34),
+
+('https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 20),
+('https://plus.unsplash.com/premium_photo-1674719144570-0728faf14f96?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 22),
+
+('https://images.unsplash.com/photo-1728487235101-664d87965931?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8T3BlbiUyMEZyb250JTIwQWJheWF8ZW58MHx8MHx8fDA%3D', 14),
+
+('https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 16),
+('https://images.unsplash.com/photo-1652370626085-b90be216dbc0?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 16),
+('https://images.unsplash.com/photo-1583623733237-4d5764a9dc82?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 17),
+('https://images.unsplash.com/photo-1583623733245-34494135202c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 17),
+('https://plus.unsplash.com/premium_photo-1679483562579-023de24ab10f?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',18),
+('https://images.unsplash.com/photo-1551607939-46fc8ac00815?q=80&w=715&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',36),
+('https://plus.unsplash.com/premium_photo-1671379102281-7225f3d3d97d?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',38),
+('https://images.unsplash.com/photo-1721373489867-b95a7b3fe16c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Q2VyYW1pYyUyMFRlYSUyMFNldHxlbnwwfHwwfHx8MA%3D%3D',41),
+('https://images.unsplash.com/photo-1743427158645-f89ff519b508?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8UHJheWVyJTIwTWF0fGVufDB8fDB8fHww',43);
+
 
 INSERT INTO reviews (user_id,comment, rate, created_at, updated_at, product_id) VALUES
 -- Reviews for Summer Dress (product_id = 1)
@@ -103,72 +261,3 @@ INSERT INTO reviews (user_id,comment, rate, created_at, updated_at, product_id) 
 -- Reviews for Laptop (product_id = 15)
 (3,'Super fast and lightweight, perfect for work.', 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 15),
 (4,'Overheats a bit when gaming.', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 15);
-
-INSERT INTO carts (created_at, updated_at,user_id) VALUES
-    (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,1), -- Cart for User 1
-    (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,1), -- Cart for User 2
-    (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,1), -- Cart for User 3
-    (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,1), -- Another cart for User 1 (e.g. old cart)
-    (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,1), -- Cart for User 4
-    (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,1), -- Cart for User 5
-    (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,1), -- Another cart for User 2
-    (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,1); -- Cart for User 6
-
-INSERT INTO cart_items (quantity, cart_id, variant_id) VALUES
-                                                           -- Cart 1 (User 1’s active cart)
-   (2, 1, 1),  -- 2x Summer Dress (variant 1)
-   (1, 1, 6),  -- 1x Running Shoes (variant 6)
-
-   -- Cart 2 (User 2’s cart)
-   (3, 2, 7),  -- 3x Running Shoes (variant 7)
-   (1, 2, 11), -- 1x Smartwatch (variant 11)
-
-   -- Cart 3 (User 3’s cart)
-   (1, 3, 9),  -- 1x Leather Boots (variant 9)
-   (2, 3, 15), -- 2x Backpack (variant 15)
-
-   -- Cart 4 (User 1’s old cart)
-   (1, 4, 4),  -- 1x Evening Gown (variant 4)
-   (2, 4, 2),  -- 2x Summer Dress (variant 2)
-
-   -- Cart 5 (User 4’s cart)
-   (1, 5, 13), -- 1x Luxury Watch (variant 13)
-
-   -- Cart 6 (User 5’s cart)
-   (2, 6, 8),  -- 2x Running Shoes (variant 8)
-   (1, 6, 10), -- 1x Leather Boots (variant 10)
-
-   -- Cart 7 (User 2’s old cart)
-   (1, 7, 3),  -- 1x Summer Dress (variant 3)
-   (1, 7, 5),  -- 1x Evening Gown (variant 5)
-
-   -- Cart 8 (User 6’s cart)
-   (1, 8, 12), -- 1x Smartwatch (variant 12)
-   (2, 8, 16); -- 2x Backpack (variant 16)
-
-
-INSERT INTO wishlists (created_at, updated_at, user_id, product_id) VALUES
-                                                                        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 1),
-                                                                        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 9),
-                                                                        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2, 3),
-                                                                        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3, 1),
-                                                                        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3, 4);
-INSERT INTO images (url, variant_id) VALUES
-('https://images.unsplash.com/photo-1655994688032-67a1b6474cf3', 1),
-('https://images.unsplash.com/photo-1621167478060-296b5ef19e5b', 2),
-('https://plus.unsplash.com/premium_photo-1661494087536-cdba32f3a2cc', 3),
-('https://images.unsplash.com/photo-1723813196516-fc9dff5f8c0d', 4),
-('https://images.unsplash.com/photo-1723813196654-ddb9003a77f6', 5),
-('https://picsum.photos/seed/product6/600/400', 6),
-('https://picsum.photos/seed/product7/600/400', 7),
-('https://picsum.photos/seed/product8/600/400', 8),
-('https://picsum.photos/seed/product9/600/400', 9),
-('https://picsum.photos/seed/product10/600/400', 10),
-('https://picsum.photos/seed/product11/600/400', 11),
-('https://picsum.photos/seed/product12/600/400', 12),
-('https://picsum.photos/seed/product13/600/400', 13),
-('https://picsum.photos/seed/product14/600/400', 14),
-('https://picsum.photos/seed/product15/600/400', 15),
-('https://picsum.photos/seed/product16/600/400', 16);
-
-

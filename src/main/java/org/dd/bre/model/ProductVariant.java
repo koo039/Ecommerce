@@ -17,39 +17,34 @@ public class ProductVariant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
 
     @Column(nullable = false, unique = true)
     private String sku;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 2)
-    private Size size;
+    @Column(length = 10)
+    private String size;
 
-    @Enumerated(EnumType.STRING)
-    private Color color;
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    private String color;
 
     @Column(name = "stock_qty", nullable = false)
-    private Integer stockQty = 0;
+    private Integer stockQty;
 
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @OneToMany(mappedBy = "productVariant",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "productVariant")
     @JsonIgnore
     private List<CartItem> cartItems;
 
-    @OneToMany(mappedBy = "productVariant",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "productVariant")
     @JsonIgnore
     private List<OrderItem> orderItems;
 
-    @OneToMany(mappedBy = "productVariant",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "productVariant",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images;
 
 }
