@@ -2,6 +2,7 @@ package org.dd.bre.Service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.dd.bre.Dto.ProductPageResponse;
 import org.dd.bre.Exception.ProductNotFoundException;
 import org.dd.bre.Exception.UserNotFoundException;
 import org.dd.bre.Repo.ProductRepo;
@@ -11,6 +12,8 @@ import org.dd.bre.model.Product;
 import org.dd.bre.Dto.ProductDTO;
 import org.dd.bre.model.User;
 import org.dd.bre.model.WishList;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -23,13 +26,13 @@ public class WishListService {
     private final UserRepo userRepo;
     private final ProductRepo productRepo;
 
-    public List<ProductDTO> getWishList(Long userId) {
-        List<WishList> wishLists = wishListRepo.findAllByUserId((userId));
-        return productService.getAllProductsByWishList(wishLists);
+    public ProductPageResponse getWishList(Long userId, Pageable pageable) {
+        List<WishList> wishLists = wishListRepo.findAllByUserId(userId);
+        return productService.getAllProductsByWishList(wishLists,pageable);
     }
 
     @Transactional
-    public List<ProductDTO> toggleWishList(Long userId, Long productId) {
+    public ProductPageResponse toggleWishList(Long userId, Long productId,Pageable pageable) {
 
         WishList wishList = wishListRepo.findByProductIdAndUserId(productId,userId);
 
@@ -45,7 +48,7 @@ public class WishListService {
         else {
             wishListRepo.delete(wishList);
         }
-        return getWishList(userId);
+        return getWishList(userId,pageable);
     }
 
 }

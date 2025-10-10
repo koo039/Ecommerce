@@ -3,22 +3,22 @@ package org.dd.bre.Mapper;
 import lombok.RequiredArgsConstructor;
 import org.dd.bre.Dto.CartDTO;
 import org.dd.bre.Dto.CartItemDTO;
+import org.dd.bre.Service.CartService;
 import org.dd.bre.model.Cart;
 import org.dd.bre.model.CartItem;
 import org.dd.bre.model.Image;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
 public class CartMapper {
 
-    public CartDTO mapToCartDTO(Cart cart) {
+
+    public CartDTO mapToCartDTO(Cart cart,int maxCartItems) {
         return new CartDTO(
-                LocalDateTime.now(),
-                LocalDateTime.now(),
+                cart.getCreatedAt(),
+                cart.getUpdatedAt(),
+                maxCartItems,
                 cart.getItems().stream()
                         .map(this::mapToCartItemDTO)
                         .collect(Collectors.toList())
@@ -29,7 +29,7 @@ public class CartMapper {
         String imageUrl = cartItem.getProductVariant().getImages().stream()
                 .map(Image::getUrl)
                 .findFirst()
-                .orElse("default-image.png");
+                .orElse(null);
 
         return new CartItemDTO(
                 cartItem.getId(),

@@ -3,12 +3,18 @@ package org.dd.bre.Service;
 import lombok.RequiredArgsConstructor;
 import org.dd.bre.Dto.ProductDTO;
 import org.dd.bre.Dto.ProductDetailsDto;
+import org.dd.bre.Dto.ProductPageResponse;
 import org.dd.bre.Exception.ProductNotFoundException;
+import org.dd.bre.Exception.WishListNotFoundException;
 import org.dd.bre.Mapper.ProductDetailsMapper;
 import org.dd.bre.Mapper.ProductMapper;
 import org.dd.bre.Repo.CategoryRepo;
 import org.dd.bre.Repo.ProductRepo;
 import org.dd.bre.model.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +28,6 @@ public class ProductService {
     private final ProductMapper productMapper;
     private final ProductDetailsMapper productDetailsMapper;
 
-
     public ProductDetailsDto getProductByName(String productName) {
         Product product = productRepo.findByProductName(productName);
         if (product == null) {
@@ -31,68 +36,74 @@ public class ProductService {
         return productDetailsMapper.mapToProductDTO(product);
     }
 
-    public List<ProductDTO> getAllProducts() {
-        List<Product> products = productRepo.findAll();
-        if (products.isEmpty()) {
-            throw new ProductNotFoundException("No products found");
-        }
-        return products.stream()
-                .map(productMapper::mapToProductDTO)
-                .toList();
-    }
 
-    protected List<ProductDTO> getAllProductsByWishList(List<WishList> wishLists) {
+    protected ProductPageResponse getAllProductsByWishList(List<WishList> wishLists,Pageable pageable) {
         List<Long> in = wishLists.stream().map(WishList::getId).toList();
-        List<Product> products = productRepo.findAllByWishLists_IdIn(in);
-        if (products.isEmpty()) {
-            return new ArrayList<>();
-        }
-        return products.stream()
-                .map(productMapper::mapToProductDTO)
-                .toList();
+        Page<Product> pageResult = productRepo.findAllByWishLists_IdIn(in,pageable);
+        return buildProductPageResponse(pageResult);
     }
 
-    public List<ProductDTO> getAllProductsByCategory(String categoryName) {
+    public ProductPageResponse getAllProductsByCategory(String categoryName,Pageable pageable, String sortBy, String direction) {
+
         Category category = categoryRepo.findByCategoryName(categoryName);
+        Page<Product> pageResult = productRepo.findAllByCategory(category, pageable);
+
         if (category == null) {
             throw new ProductNotFoundException("Category not found: " + categoryName);
         }
 
-        List<Product> products = productRepo.findAllByCategory(category);
-        if (products.isEmpty()) {
-            return new ArrayList<>();
+        if("rate".equalsIgnoreCase(sortBy)) {
+            pageResult = productRepo.findAllByCategoryHighRate(category,pageable);
         }
-        return products.stream()
-                .map(productMapper::mapToProductDTO)
-                .toList();
+
+        else if("price".equalsIgnoreCase(sortBy)) {
+            Pageable page = sortProducts(pageable, sortBy, direction);
+            pageResult = productRepo.findAllByCategory(category, page);
+        }
+
+        return buildProductPageResponse(pageResult);
+
+    }
+    public ProductPageResponse getAllProducts(Pageable pageable, String sortBy, String direction) {
+        Page<Product> pageResult = productRepo.findAll(pageable);
+
+        if("rate".equalsIgnoreCase(sortBy)) {
+            pageResult = productRepo.findAllByHighRate(pageable);
+        }
+
+        else if("price".equalsIgnoreCase(sortBy)) {
+            Pageable page = sortProducts(pageable, sortBy, direction);
+            pageResult = productRepo.findAll(page);
+        }
+
+        return buildProductPageResponse(pageResult);
+    }
+
+    public ProductPageResponse buildProductPageResponse(Page<Product> pageResult) {
+        List<ProductDTO> dtos =  new ArrayList<>();
+        if (!pageResult.isEmpty()) {
+            dtos = pageResult.getContent().stream()
+                    .map(productMapper::mapToProductDTO)
+                    .toList();
+        }
+
+        return new ProductPageResponse(
+                dtos,
+                pageResult.getNumber(),
+                pageResult.getSize(),
+                pageResult.getTotalElements(),
+                pageResult.getTotalPages(),
+                pageResult.hasNext()
+        );
+    }
+
+    public Pageable sortProducts(Pageable pageable,String sortBy,String direction) {
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
     }
 
 
-    public List<ProductDTO> getAllProductsAsc(){
-        List<Product> products = productRepo.findAllAsc();
-        if (products.isEmpty()) {
-            throw new ProductNotFoundException("No products found");
-        }
-        return products.stream()
-                .map(productMapper::mapToProductDTO)
-                .toList();
-    }
-    public List<ProductDTO> getAllProductsDesc(){
-        List<Product> products = productRepo.findAllDesc();
-        if (products.isEmpty()) {
-            throw new ProductNotFoundException("No products found");
-        }
-        return products.stream()
-                .map(productMapper::mapToProductDTO)
-                .toList();
-    }
-    public List<ProductDTO> getAllProductsHighRate(){
-        List<Product> products = productRepo.findAllByHighRate();
-        if (products.isEmpty()) {
-            throw new ProductNotFoundException("No products found");
-        }
-        return products.stream()
-                .map(productMapper::mapToProductDTO)
-                .toList();
-    }
 }

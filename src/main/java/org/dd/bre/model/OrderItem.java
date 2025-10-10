@@ -17,7 +17,7 @@ public class OrderItem {
     private Integer id;
 
     @Column(nullable = false)
-    private Integer quantity = 1;
+    private Integer quantity;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal subtotal;

@@ -1,50 +1,47 @@
 package org.dd.bre.Controller;
 
+import lombok.RequiredArgsConstructor;
 import org.dd.bre.Dto.ProductDetailsDto;
+import org.dd.bre.Dto.ProductPageResponse;
 import org.dd.bre.Service.ProductService;
-import org.dd.bre.model.Product;
-import org.dd.bre.Dto.ProductDTO;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("api/products")
+@RequiredArgsConstructor
 public class ProductController {
-
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService){
-        this.productService = productService;
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ProductDTO>> getAllProductHandler(){
-        return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
-    }
-
     @GetMapping("/category")
-    public ResponseEntity<List<ProductDTO>> getAllProductByCategoryHandler(@RequestParam String categoryName){
-        return new ResponseEntity<>(productService.getAllProductsByCategory(categoryName), HttpStatus.OK);
+    public ResponseEntity<ProductPageResponse> getAllProductByCategoryHandler(@RequestParam String categoryName,
+                                                                           @RequestParam(defaultValue = "0") int page,
+                                                                           @RequestParam(defaultValue = "12") int size,
+                                                                           @RequestParam(required = false) String sortBy,
+                                                                           @RequestParam(required = false) String direction){
+        Pageable pageable = PageRequest.of(page, size);
+        return new ResponseEntity<>(productService.getAllProductsByCategory(categoryName,pageable,sortBy,direction), HttpStatus.OK);
     }
 
     @GetMapping("/{productName}")
     public ResponseEntity<ProductDetailsDto> getProductByNameHandler(@PathVariable String productName){
         return new ResponseEntity<>(productService.getProductByName(productName), HttpStatus.OK);
     }
-    @GetMapping("/asc_price")
-    public ResponseEntity<List<ProductDTO>> getAllProductAscHandler(){
-        return new ResponseEntity<>(productService.getAllProductsAsc(), HttpStatus.OK);
+
+    @GetMapping
+    public ResponseEntity<ProductPageResponse> getAllProductsHandler(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String direction) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(productService.getAllProducts(pageable, sortBy, direction));
     }
-    @GetMapping("/desc_price")
-    public ResponseEntity<List<ProductDTO>> getAllProductDescHandler(){
-        return new ResponseEntity<>(productService.getAllProductsDesc(), HttpStatus.OK);
-    }
-    @GetMapping("/high_rating")
-    public ResponseEntity<List<ProductDTO>> getAllProductByHighRateHandler(){
-        return new ResponseEntity<>(productService.getAllProductsHighRate(), HttpStatus.OK);
-    }
+
 
 }

@@ -15,8 +15,6 @@ import org.dd.bre.Repo.ProductVariantRepo;
 import org.dd.bre.model.*;
 import org.springframework.stereotype.Service;
 
-
-
 @Service
 @RequiredArgsConstructor
 public class CartService {
@@ -25,16 +23,17 @@ public class CartService {
     private final CartItemRepo cartItemRepo;
     private final ProductVariantRepo productVariantRepo;
     private final CartMapper cartMapper;
+    public final int MAX_CART_ITEMS = 10;
 
 
     public CartDTO getCart(Long userId) {
+
         Cart cart = cartRepo.findByUserId(userId);
 
         if (cart == null) {
             throw new CartNotFoundException("Cart not found");
         }
-
-        return cartMapper.mapToCartDTO(cart);
+        return cartMapper.mapToCartDTO(cart,MAX_CART_ITEMS);
     }
 
 
@@ -45,7 +44,7 @@ public class CartService {
         Cart cart = cartRepo.findByUserId(userId);
 
         if (cart == null) {
-            throw new CartItemNotFoundException("Cart item not found");
+            throw new CartNotFoundException("Cart not found");
         }
         cartRepo.delete(cart);
     }
@@ -54,6 +53,7 @@ public class CartService {
     public CartDTO updateItemQuantity(Long userId, Long itemId, UpdateItemQuantityDto req) {
 
         CartItem item = cartItemRepo.findByIdAndCart_User_Id(itemId, userId);
+
         if (item == null) {
             throw new CartItemNotFoundException("Cart item not found");
         }
@@ -64,22 +64,26 @@ public class CartService {
 
         item.setQuantity(req.getQuantity());
         cartItemRepo.save(item);
-
-        return cartMapper.mapToCartDTO(item.getCart());
+        return cartMapper.mapToCartDTO(item.getCart(),MAX_CART_ITEMS);
     }
 
 
     public CartDTO deleteItem(Long userId, Long itemId) {
 
         CartItem item = cartItemRepo.findByIdAndCart_User_Id(itemId, userId);
+
         if (item == null) {
             throw new CartItemNotFoundException("Cart item not found");
         }
+
         cartItemRepo.delete(item);
-        return cartMapper.mapToCartDTO(item.getCart());
+        return cartMapper.mapToCartDTO(item.getCart(),MAX_CART_ITEMS);
     }
 
     public CartItemDTO addItemToCart(Long userId, AddItemToCartDto req) {
+        if (req.getQuantity() <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than 0");
+        }
 
         Cart cart = cartRepo.findByUserId(userId);
         if (cart == null) {
@@ -89,11 +93,8 @@ public class CartService {
         ProductVariant variant = productVariantRepo.findById(req.getVariantId())
                 .orElseThrow(() -> new ProductVariantNotFoundException("Product variant not found"));
 
-        CartItem existingItem = cart.getItems().stream()
-                .filter(item -> item.getProductVariant().getId().equals(variant.getId()))
-                .findFirst()
-                .orElse(null);
-        CartItem item = new CartItem();
+        CartItem existingItem = cartItemRepo.findByCartIdAndProductVariantId(cart.getId(), variant.getId());
+
         if (existingItem != null) {
             int newQuantity = existingItem.getQuantity() + req.getQuantity();
 
@@ -103,16 +104,20 @@ public class CartService {
 
             existingItem.setQuantity(newQuantity);
             cartItemRepo.save(existingItem);
-            item = existingItem;
+
         } else {
+            long count = cartItemRepo.countByCartId(cart.getId());
+            if (count >= MAX_CART_ITEMS) {
+                throw new IllegalArgumentException("Cart item count cannot exceed " + MAX_CART_ITEMS);
+            }
             CartItem newItem = new CartItem();
             newItem.setCart(cart);
             newItem.setProductVariant(variant);
             newItem.setQuantity(req.getQuantity());
             cartItemRepo.save(newItem);
-            item = newItem;
+            existingItem = newItem;
         }
-        return cartMapper.mapToCartItemDTO(item);
+        return cartMapper.mapToCartItemDTO(existingItem);
     }
 
 

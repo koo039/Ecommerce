@@ -5,8 +5,6 @@ import org.dd.bre.model.Image;
 import org.dd.bre.model.Product;
 import org.dd.bre.model.ProductVariant;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @Component

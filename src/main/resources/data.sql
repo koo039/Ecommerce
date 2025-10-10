@@ -29,7 +29,7 @@ VALUES
 INSERT INTO products (product_name, description, created_at, updated_at, category_id, price, original_price)
 VALUES
     ('Floral Summer Dress', 'Lightweight modest summer dress with floral patterns.', NOW(), NOW(), 1, 39.99, null),
-    ('Evening Maxi Dress', 'Elegant long sleeve maxi dress for events.', NOW(), NOW(), 1, 59.99, 79.99);
+    ('Evening Maxi Dress', 'Elegant long sleeve maxi dress for events.', NOW(), NOW(), 1, 79.99, null);
 
 INSERT INTO product_variants (sku, size, color, stock_qty, product_id)
 VALUES
@@ -190,6 +190,37 @@ INSERT INTO wishlists (created_at, updated_at, user_id, product_id) VALUES
                                                                         (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2, 3),
                                                                         (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3, 1),
                                                                         (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3, 4);
+
+INSERT INTO status (status_name)
+VALUES
+    ('PENDING'),
+    ('PROCESSING'),
+    ('SHIPPED'),
+    ('DELIVERED'),
+    ('CANCELLED'),
+    ('RETURNED');
+
+-- Corrected orders table (totals now match item subtotals)
+INSERT INTO orders (total_price, created_at, updated_at, user_id, status_id)
+VALUES
+    (199.96, NOW(), NOW(), 1, 1), -- 3 items × 39.99 = 119.97 (PENDING)
+    (159.96, NOW(), NOW(), 1, 2), -- 4 items × 39.99 = 159.96 (PROCESSING)
+    (399.95, NOW(), NOW(), 1, 3), -- 5 items × 79.99 = 399.95 (SHIPPED)
+    (79.99, NOW(), NOW(), 1, 4),  -- 1 item × 79.99 = 79.99 (DELIVERED)
+    (39.99, NOW(), NOW(), 1, 5);  -- 1 item × 39.99 = 39.99 (CANCELLED)
+
+-- Corrected order_items table (prices consistent with variant prices)
+INSERT INTO order_items (quantity, subtotal, order_id, variant_id)
+VALUES
+    (3, 119.97, 1, 1),  -- 3 × 39.99 = 119.97
+    (4, 159.96, 2, 2),  -- 4 × 39.99 = 159.96
+    (1, 79.99, 1, 4),
+    (5, 399.95, 3, 4),  -- 5 × 79.99 = 399.95
+    (1, 79.99, 4, 4),  -- 1 × 79.99 = 79.99
+    (1, 39.99, 5, 3);   -- 1 × 39.99 = 39.99
+
+
+
 INSERT INTO images (url, variant_id) VALUES
 ('https://images.unsplash.com/photo-1655994688032-67a1b6474cf3', 1),
 ('https://images.unsplash.com/photo-1621167478060-296b5ef19e5b', 1),
@@ -197,7 +228,7 @@ INSERT INTO images (url, variant_id) VALUES
 ('https://images.unsplash.com/photo-1621167478060-296b5ef19e5b', 2),
 ('https://images.unsplash.com/photo-1609741873312-7ce5ae7c56b4?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',3),
 
-('https://plus.unsplash.com/premium_photo-1661494087536-cdba32f3a2cc', 5),
+('https://plus.unsplash.com/premium_photo-1661494087536-cdba32f3a2cc', 4),
 
 ('https://images.unsplash.com/photo-1730454809551-58c6afadec4c?q=80&w=686&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 28),
 ('https://images.unsplash.com/photo-1618407961072-5afd4ea27e41?q=80&w=721&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 30),
