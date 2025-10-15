@@ -33,6 +33,7 @@ public class ProductDetailsMapper {
                 productVariant.getSize(),
                 productVariant.getColor(),
                 productVariant.getStockQty(),
+                productVariant.getStatus(),
                 productVariant.getImages().stream()
                         .map(this::mapToImage)
                         .collect(Collectors.toList())

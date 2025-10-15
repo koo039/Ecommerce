@@ -23,11 +23,10 @@ public class CartController {
         return ResponseEntity.ok(cartService.getCart(userId));
     }
 
-
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteMyCart() {
+    public ResponseEntity<Void> clearMyCart() {
         Long userId = getAuthenticatedUserId();
-        cartService.deleteCart(userId);
+        cartService.clearCart(userId);
         return ResponseEntity.noContent().build();
     }
 

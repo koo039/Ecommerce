@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -30,6 +29,10 @@ public class ProductVariant {
 
     @Column(name = "stock_qty", nullable = false)
     private Integer stockQty;
+
+    @Enumerated(EnumType.STRING)
+    private VariantStatus status = VariantStatus.INSTOCK;
+
 
     @JsonBackReference
     @ManyToOne

@@ -31,13 +31,13 @@ VALUES
     ('Floral Summer Dress', 'Lightweight modest summer dress with floral patterns.', NOW(), NOW(), 1, 39.99, null),
     ('Evening Maxi Dress', 'Elegant long sleeve maxi dress for events.', NOW(), NOW(), 1, 79.99, null);
 
-INSERT INTO product_variants (sku, size, color, stock_qty, product_id)
+INSERT INTO product_variants (sku, size, color, stock_qty, product_id,status)
 VALUES
-    ('DRS-001-S-BLUE', 'S', 'RED', 5, 1),
-    ('DRS-001-M-BLUE', 'M', 'RED', 40, 1),
-    ('DRS-001-L-PINK', 'L', 'PINK', 20, 1),
-    ('DRS-002-M-BLACK', 'M', 'BLACK', 25, 2),
-    ('DRS-002-L-BLACK', 'L', 'BLACK', 20, 2);
+    ('DRS-001-S-BLUE', 'S', 'RED', 0, 1,'OUTOFSTOCK'),
+    ('DRS-001-M-BLUE', 'M', 'RED', 0, 1,'OUTOFSTOCK'),
+    ('DRS-001-L-PINK', 'L', 'PINK', 20, 1,'INSTOCK'),
+    ('DRS-002-M-BLACK', 'M', 'BLACK', 0, 2,'OUTOFSTOCK'),
+    ('DRS-002-L-BLACK', 'L', 'BLACK', 20, 2,'INSTOCK');
 
 -- Shoes
 INSERT INTO products (product_name, description, created_at, updated_at, category_id, price, original_price)
@@ -292,3 +292,6 @@ INSERT INTO reviews (user_id,comment, rate, created_at, updated_at, product_id) 
 -- Reviews for Laptop (product_id = 15)
 (3,'Super fast and lightweight, perfect for work.', 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 15),
 (4,'Overheats a bit when gaming.', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 15);
+UPDATE product_variants
+SET status = 'INSTOCK'
+WHERE status IS NULL;

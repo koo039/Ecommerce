@@ -39,14 +39,15 @@ public class CartService {
 
 
 
-    public void deleteCart(Long userId) {
+    public void clearCart(Long userId) {
 
         Cart cart = cartRepo.findByUserId(userId);
 
         if (cart == null) {
             throw new CartNotFoundException("Cart not found");
         }
-        cartRepo.delete(cart);
+        cart.getItems().clear();
+        cartRepo.save(cart);
     }
 
 
