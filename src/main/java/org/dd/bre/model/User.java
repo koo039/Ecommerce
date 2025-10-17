@@ -1,7 +1,6 @@
 package org.dd.bre.model;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -58,10 +57,8 @@ public class User {
     @Column(name = "updated_at",nullable = false)
     private LocalDateTime updatedAt;
 
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @Enumerated(EnumType.STRING)
+    private UserRole user_role;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishList> wishLists;
@@ -71,6 +68,9 @@ public class User {
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Address> addresses;
 
     //@OneToMany(mappedBy = "user")
     //private List<Order> orders;

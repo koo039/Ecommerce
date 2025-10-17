@@ -1,12 +1,10 @@
-INSERT INTO roles (id, role_name) VALUES
-                                 (1, 'ROLE_USER'),
-                                 (2, 'ROLE_ADMIN');
-INSERT INTO users (first_name, last_name, username, email, phone, password_hash, created_at, updated_at, role_id)
+
+INSERT INTO users (first_name, last_name, username, email, phone, password_hash, created_at, updated_at, user_role)
 VALUES
-    ( 'John', 'Doe', 'user1', 'user1@example.com', '+21360000001', 'hashedPassword1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1),
-    ( 'Jane', 'Smith', 'user2', 'user2@example.com', '+21360000002', 'hashedPassword2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1),
-    ( 'Ali', 'Karim', 'user3', 'user3@example.com', '+21360000003', 'hashedPassword3', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1),
-    ( 'Sara', 'Amar', 'user4', 'user4@example.com', '+21360000004', 'hashedPassword4', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1);
+    ( 'John', 'Doe', 'user1', 'user1@example.com', '+21360000001', 'hashedPassword1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER'),
+    ( 'Jane', 'Smith', 'user2', 'user2@example.com', '+21360000002', 'hashedPassword2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER'),
+    ( 'Ali', 'Karim', 'user3', 'user3@example.com', '+21360000003', 'hashedPassword3', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER'),
+    ( 'Sara', 'Amar', 'user4', 'user4@example.com', '+21360000004', 'hashedPassword4', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER');
 
 INSERT INTO categories (category_name)
 VALUES
@@ -191,23 +189,29 @@ INSERT INTO wishlists (created_at, updated_at, user_id, product_id) VALUES
                                                                         (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3, 1),
                                                                         (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3, 4);
 
-INSERT INTO status (status_name)
+INSERT INTO addresses (
+    user_id, address_line1, city, state, country, postal_code, phone_number, label, created_at, updated_at
+)
 VALUES
-    ('PENDING'),
-    ('PROCESSING'),
-    ('SHIPPED'),
-    ('DELIVERED'),
-    ('CANCELLED'),
-    ('RETURNED');
+    (1, '123 Main Street', 'New York', 'NY', 'USA', '10001', '+1234567890', 'Home', NOW(), NOW()),
+    (1, '500 Market St', 'San Francisco', 'CA', 'USA', '94105', '+1234567000', 'Work', NOW(), NOW());
+
+INSERT INTO shipping_addresses (
+     address_line1, city, state, country, postal_code, phone_number, label, created_at, updated_at
+)
+VALUES
+    ( '123 Main Street', 'New York', 'NY', 'USA', '10001', '+1234567890', 'Home', NOW(), NOW()),
+    ( '500 Market St', 'San Francisco', 'CA', 'USA', '94105', '+1234567000', 'Work', NOW(), NOW());
+
 
 -- Corrected orders table (totals now match item subtotals)
-INSERT INTO orders (total_price, created_at, updated_at, user_id, status_id)
+INSERT INTO orders (order_number,total_price,shipping_price, created_at, updated_at, user_id, order_status,shipping_address_id)
 VALUES
-    (199.96, NOW(), NOW(), 1, 1), -- 3 items × 39.99 = 119.97 (PENDING)
-    (159.96, NOW(), NOW(), 1, 2), -- 4 items × 39.99 = 159.96 (PROCESSING)
-    (399.95, NOW(), NOW(), 1, 3), -- 5 items × 79.99 = 399.95 (SHIPPED)
-    (79.99, NOW(), NOW(), 1, 4),  -- 1 item × 79.99 = 79.99 (DELIVERED)
-    (39.99, NOW(), NOW(), 1, 5);  -- 1 item × 39.99 = 39.99 (CANCELLED)
+    ('1',199.96,10, NOW(), NOW(), 1, 'PENDING',1), -- 3 items × 39.99 = 119.97 (PENDING)
+    ('2',159.96,10, NOW(), NOW(), 1, 'PROCESSING',2), -- 4 items × 39.99 = 159.96 (PROCESSING)
+    ('3',399.95,10, NOW(), NOW(), 1, 'SHIPPED',1), -- 5 items × 79.99 = 399.95 (SHIPPED)
+    ('4',79.99,10, NOW(), NOW(), 1, 'DELIVERED',2),  -- 1 item × 79.99 = 79.99 (DELIVERED)
+    ('5',39.99,10, NOW(), NOW(), 1, 'CANCELLED',1);  -- 1 item × 39.99 = 39.99 (CANCELLED)
 
 -- Corrected order_items table (prices consistent with variant prices)
 INSERT INTO order_items (quantity, subtotal, order_id, variant_id)
@@ -218,6 +222,7 @@ VALUES
     (5, 399.95, 3, 4),  -- 5 × 79.99 = 399.95
     (1, 79.99, 4, 4),  -- 1 × 79.99 = 79.99
     (1, 39.99, 5, 3);   -- 1 × 39.99 = 39.99
+
 
 
 

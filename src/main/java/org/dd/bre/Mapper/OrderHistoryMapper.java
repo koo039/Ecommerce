@@ -15,7 +15,7 @@ public class OrderHistoryMapper {
                 order.getCreatedAt(),
                 order.getId(),
                 order.getTotalPrice(),
-                order.getStatus().getStatusName(),
+                order.getOrder_status(),
                 order.getItems().stream()
                         .map(this::mapToOrderItemDTO)
                         .collect(Collectors.toList())
