@@ -45,6 +45,10 @@ public class User {
     @Column(nullable = false)
     private String phone;
 
+    //private boolean emailActivate = false;
+
+    //private boolean smsActivate = false;
+
     @JsonIgnore
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
