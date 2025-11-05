@@ -22,6 +22,17 @@ public class GlobalExceptionHandler{
         return new ResponseEntity<>(errorResponse,HttpStatus.NOT_FOUND);
 
     }
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ErrorDetails> handleProductNotFoundException(ProductNotFoundException ex)
+    {
+        ErrorDetails errorResponse = new ErrorDetails(
+                ex.getMessage(),
+                HttpStatus.NOT_FOUND.value(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponse,HttpStatus.NOT_FOUND);
+
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleBadReqException(Exception ex)
     {

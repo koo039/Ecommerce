@@ -27,15 +27,21 @@ public class Order {
     @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
-    @Column(name = "shipping_price", nullable = false, precision = 10, scale = 2)
+    @Column(name = "shipping_price", precision = 10, scale = 2)
     private BigDecimal shippingPrice;
+
+    @Column(name = "tax_amount", precision = 10, scale = 2)
+    private BigDecimal taxAmount;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod = PaymentMethod.CASH_ON_DELIVERY;
 
     @CreationTimestamp
     @Column(name = "created_at",updatable = false,nullable = false)
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus order_status;
+    private OrderStatus order_status = OrderStatus.PENDING;
 
     @UpdateTimestamp
     @Column(name = "updated_at",nullable = false)
@@ -46,11 +52,14 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JsonBackReference
     @JoinColumn(name = "shipping_address_id", nullable = false)
     private ShippingAddress shippingAddress;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items;
+
+//    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+//    private Payment payment;
 }

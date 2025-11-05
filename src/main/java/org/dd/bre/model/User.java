@@ -45,9 +45,11 @@ public class User {
     @Column(nullable = false)
     private String phone;
 
-    //private boolean emailActivate = false;
+    @Column(name = "is_email_enabled",nullable = false)
+    private Boolean isEmailEnabled = false;
 
-    //private boolean smsActivate = false;
+    @Column(name = "is_phone_enabled",nullable = false)
+    private Boolean isPhoneEnabled = false;
 
     @JsonIgnore
     @Column(name = "password_hash", nullable = false, length = 255)

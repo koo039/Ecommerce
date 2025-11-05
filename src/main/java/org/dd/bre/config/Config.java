@@ -11,7 +11,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 public class Config {
 
     @Bean
-    public ModelMapper modelmaper(){
+    public ModelMapper moderMapper() {
         return new ModelMapper();
     }
 

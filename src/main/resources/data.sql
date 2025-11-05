@@ -1,10 +1,10 @@
 
-INSERT INTO users (first_name, last_name, username, email, phone, password_hash, created_at, updated_at, user_role)
+INSERT INTO users (first_name, last_name, username, email, phone, password_hash, created_at, updated_at, user_role,is_email_enabled,is_phone_enabled)
 VALUES
-    ( 'John', 'Doe', 'user1', 'user1@example.com', '+21360000001', 'hashedPassword1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER'),
-    ( 'Jane', 'Smith', 'user2', 'user2@example.com', '+21360000002', 'hashedPassword2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER'),
-    ( 'Ali', 'Karim', 'user3', 'user3@example.com', '+21360000003', 'hashedPassword3', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER'),
-    ( 'Sara', 'Amar', 'user4', 'user4@example.com', '+21360000004', 'hashedPassword4', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER');
+    ( 'John', 'Doe', 'user1', 'user1@example.com', '+21360000001', 'hashedPassword1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0),
+    ( 'Jane', 'Smith', 'user2', 'user2@example.com', '+21360000002', 'hashedPassword2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0),
+    ( 'Ali', 'Karim', 'user3', 'user3@example.com', '+21360000003', 'hashedPassword3', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0),
+    ( 'Sara', 'Amar', 'user4', 'user4@example.com', '+21360000004', 'hashedPassword4', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0);
 
 INSERT INTO categories (category_name)
 VALUES
@@ -31,7 +31,7 @@ VALUES
 
 INSERT INTO product_variants (sku, size, color, stock_qty, product_id,status)
 VALUES
-    ('DRS-001-S-BLUE', 'S', 'RED', 0, 1,'OUTOFSTOCK'),
+    ('DRS-001-S-BLUE', 'S', 'RED', 2, 1,'INSTOCK'),
     ('DRS-001-M-BLUE', 'M', 'RED', 0, 1,'OUTOFSTOCK'),
     ('DRS-001-L-PINK', 'L', 'PINK', 20, 1,'INSTOCK'),
     ('DRS-002-M-BLACK', 'M', 'BLACK', 0, 2,'OUTOFSTOCK'),
@@ -214,7 +214,7 @@ VALUES
     ('5',39.99,10, NOW(), NOW(), 1, 'CANCELLED',1);  -- 1 item × 39.99 = 39.99 (CANCELLED)
 
 -- Corrected order_items table (prices consistent with variant prices)
-INSERT INTO order_items (quantity, subtotal, order_id, variant_id)
+INSERT INTO order_items (quantity, price, order_id, variant_id)
 VALUES
     (3, 119.97, 1, 1),  -- 3 × 39.99 = 119.97
     (4, 159.96, 2, 2),  -- 4 × 39.99 = 159.96

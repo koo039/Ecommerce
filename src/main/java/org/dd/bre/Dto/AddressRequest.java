@@ -27,5 +27,6 @@ public class AddressRequest {
     @Pattern(regexp = "^[+0-9]{6,15}$", message = "Invalid phone number")
     private String phoneNumber;
 
+    @NotBlank
     private String label;
 }

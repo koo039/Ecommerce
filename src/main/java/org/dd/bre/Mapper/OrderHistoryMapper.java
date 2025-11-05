@@ -5,6 +5,7 @@ import org.dd.bre.Dto.OrderItemDto;
 import org.dd.bre.model.*;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
 @Component
@@ -30,7 +31,7 @@ public class OrderHistoryMapper {
 
         return new OrderItemDto(
                 orderItem.getQuantity(),
-                orderItem.getSubtotal(),
+                orderItem.getPrice().multiply(new BigDecimal(orderItem.getQuantity())),
                 orderItem.getProductVariant().getProduct().getProductName(),
                 imageUrl,
                 orderItem.getProductVariant().getProduct().getPrice(),

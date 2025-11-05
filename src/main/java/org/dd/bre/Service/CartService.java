@@ -13,6 +13,7 @@ import org.dd.bre.Repo.CartItemRepo;
 import org.dd.bre.Repo.CartRepo;
 import org.dd.bre.Repo.ProductVariantRepo;
 import org.dd.bre.model.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,7 +24,8 @@ public class CartService {
     private final CartItemRepo cartItemRepo;
     private final ProductVariantRepo productVariantRepo;
     private final CartMapper cartMapper;
-    public final int MAX_CART_ITEMS = 10;
+    @Value("${app.cart.max-cart-items}")
+    public int MAX_CART_ITEMS;
 
 
     public CartDTO getCart(Long userId) {

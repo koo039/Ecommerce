@@ -1,11 +1,9 @@
 package org.dd.bre.Repo;
 
-
-import org.dd.bre.model.Cart;
+import org.dd.bre.model.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CartRepo extends JpaRepository<Cart,Long> {
-    Cart findByUserId(Long userId);
+public interface OrderItemRepo extends JpaRepository<OrderItem, Long> {
 }

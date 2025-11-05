@@ -1,6 +1,6 @@
 package org.dd.bre.Service;
 
-import jakarta.validation.Valid;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.dd.bre.Dto.AddressRequest;
 import org.dd.bre.Dto.AddressResponse;
@@ -12,7 +12,6 @@ import org.dd.bre.model.Address;
 import org.dd.bre.model.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +19,12 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AddressSerivce {
+public class AddressService {
     private final AddressRepo addressRepo;
     private final ModelMapper modelMapper;
     private final UserRepo userRepo;
 
-    public List<AddressResponse> getAdresses(Long userId){
+    public List<AddressResponse> getAddresses(Long userId){
 
         User user = userRepo.findById(userId).orElseThrow(()-> new UserNotFoundException("User not found"));
 
@@ -40,6 +39,7 @@ public class AddressSerivce {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteAddress(Long userId,Long addressId){
 
         User user = userRepo.findById(userId).orElseThrow(()-> new UserNotFoundException("User not found"));
@@ -52,6 +52,8 @@ public class AddressSerivce {
 
         addressRepo.delete(address);
     }
+
+    @Transactional
     public AddressResponse addAddress(Long userId,AddressRequest addressRequest){
 
         User user = userRepo.findById(userId).orElseThrow(()-> new UserNotFoundException("User not found"));
@@ -70,6 +72,7 @@ public class AddressSerivce {
         return modelMapper.map(address, AddressResponse.class);
     }
 
+    @Transactional
     public AddressResponse updateAddress(Long userId,Long addressId,AddressRequest addressRequest){
 
         User user = userRepo.findById(userId).orElseThrow(()-> new UserNotFoundException("User not found"));
