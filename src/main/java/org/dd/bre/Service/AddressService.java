@@ -11,6 +11,7 @@ import org.dd.bre.Repo.UserRepo;
 import org.dd.bre.model.Address;
 import org.dd.bre.model.User;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,9 +25,9 @@ public class AddressService {
     private final ModelMapper modelMapper;
     private final UserRepo userRepo;
 
-    public List<AddressResponse> getAddresses(Long userId){
+    public List<AddressResponse> getAddresses(UserDetails userDetails){
 
-        User user = userRepo.findById(userId).orElseThrow(()-> new UserNotFoundException("User not found"));
+        User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
 
         List<Address> addresses = addressRepo.findAllByUserId(user.getId());
 
@@ -40,9 +41,9 @@ public class AddressService {
     }
 
     @Transactional
-    public void deleteAddress(Long userId,Long addressId){
+    public void deleteAddress(UserDetails userDetails,Long addressId){
 
-        User user = userRepo.findById(userId).orElseThrow(()-> new UserNotFoundException("User not found"));
+        User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
 
         Address address = addressRepo.findById(addressId).orElseThrow(() -> new AddressNotFoundException("Address not found"));
 
@@ -54,9 +55,9 @@ public class AddressService {
     }
 
     @Transactional
-    public AddressResponse addAddress(Long userId,AddressRequest addressRequest){
+    public AddressResponse addAddress(UserDetails userDetails,AddressRequest addressRequest){
 
-        User user = userRepo.findById(userId).orElseThrow(()-> new UserNotFoundException("User not found"));
+        User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
         Address address = new  Address();
         address.setUser(user);
         address.setAddressLine1(addressRequest.getAddressLine1());
@@ -73,9 +74,9 @@ public class AddressService {
     }
 
     @Transactional
-    public AddressResponse updateAddress(Long userId,Long addressId,AddressRequest addressRequest){
+    public AddressResponse updateAddress(UserDetails userDetails, Long addressId, AddressRequest addressRequest){
 
-        User user = userRepo.findById(userId).orElseThrow(()-> new UserNotFoundException("User not found"));
+        User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
 
         Address address = addressRepo.findById(addressId).orElseThrow(() -> new AddressNotFoundException("Address not found"));
 

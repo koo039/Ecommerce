@@ -8,12 +8,15 @@ import org.dd.bre.Dto.UpdateItemQuantityDto;
 import org.dd.bre.Exception.CartItemNotFoundException;
 import org.dd.bre.Exception.CartNotFoundException;
 import org.dd.bre.Exception.ProductVariantNotFoundException;
+import org.dd.bre.Exception.UserNotFoundException;
 import org.dd.bre.Mapper.CartMapper;
 import org.dd.bre.Repo.CartItemRepo;
 import org.dd.bre.Repo.CartRepo;
 import org.dd.bre.Repo.ProductVariantRepo;
+import org.dd.bre.Repo.UserRepo;
 import org.dd.bre.model.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,11 +29,14 @@ public class CartService {
     private final CartMapper cartMapper;
     @Value("${app.cart.max-cart-items}")
     public int MAX_CART_ITEMS;
+    private final UserRepo userRepo;
 
 
-    public CartDTO getCart(Long userId) {
+    public CartDTO getCart(UserDetails userDetails) {
 
-        Cart cart = cartRepo.findByUserId(userId);
+        User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
+
+        Cart cart = cartRepo.findByUserId(user.getId());
 
         if (cart == null) {
             throw new CartNotFoundException("Cart not found");
@@ -53,9 +59,10 @@ public class CartService {
     }
 
 
-    public CartDTO updateItemQuantity(Long userId, Long itemId, UpdateItemQuantityDto req) {
+    public CartDTO updateItemQuantity(UserDetails userDetails, Long itemId, UpdateItemQuantityDto req) {
 
-        CartItem item = cartItemRepo.findByIdAndCart_User_Id(itemId, userId);
+        User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
+        CartItem item = cartItemRepo.findByIdAndCart_User_Id(itemId, user.getId());
 
         if (item == null) {
             throw new CartItemNotFoundException("Cart item not found");
@@ -71,9 +78,10 @@ public class CartService {
     }
 
 
-    public CartDTO deleteItem(Long userId, Long itemId) {
+    public CartDTO deleteItem(UserDetails userDetails, Long itemId) {
 
-        CartItem item = cartItemRepo.findByIdAndCart_User_Id(itemId, userId);
+        User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
+        CartItem item = cartItemRepo.findByIdAndCart_User_Id(itemId, user.getId());
 
         if (item == null) {
             throw new CartItemNotFoundException("Cart item not found");
@@ -83,12 +91,15 @@ public class CartService {
         return cartMapper.mapToCartDTO(item.getCart(),MAX_CART_ITEMS);
     }
 
-    public CartItemDTO addItemToCart(Long userId, AddItemToCartDto req) {
+    public CartItemDTO addItemToCart(UserDetails userDetails, AddItemToCartDto req) {
+
+        User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
+
         if (req.getQuantity() <= 0) {
             throw new IllegalArgumentException("Quantity must be greater than 0");
         }
 
-        Cart cart = cartRepo.findByUserId(userId);
+        Cart cart = cartRepo.findByUserId(user.getId());
         if (cart == null) {
             throw new CartNotFoundException("Cart not found");
         }

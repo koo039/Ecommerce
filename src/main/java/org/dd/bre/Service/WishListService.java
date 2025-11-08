@@ -14,6 +14,7 @@ import org.dd.bre.model.User;
 import org.dd.bre.model.WishList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -26,19 +27,21 @@ public class WishListService {
     private final UserRepo userRepo;
     private final ProductRepo productRepo;
 
-    public ProductPageResponse getWishList(Long userId, Pageable pageable) {
-        List<WishList> wishLists = wishListRepo.findAllByUserId(userId);
+    public ProductPageResponse getWishList(UserDetails userDetails, Pageable pageable) {
+        User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
+        List<WishList> wishLists = wishListRepo.findAllByUserId(user.getId());
         return productService.getAllProductsByWishList(wishLists,pageable);
     }
 
     @Transactional
-    public ProductPageResponse toggleWishList(Long userId, Long productId,Pageable pageable) {
+    public ProductPageResponse toggleWishList(UserDetails userDetails, Long productId,Pageable pageable) {
 
-        WishList wishList = wishListRepo.findByProductIdAndUserId(productId,userId);
+        User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
+
+        WishList wishList = wishListRepo.findByProductIdAndUserId(productId,user.getId());
 
         if(wishList == null){
 
-            User user = userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
             Product product = productRepo.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product not found"));
             WishList newWishList = new WishList();
             newWishList.setUser(user);
@@ -48,7 +51,7 @@ public class WishListService {
         else {
             wishListRepo.delete(wishList);
         }
-        return getWishList(userId,pageable);
+        return getWishList(userDetails,pageable);
     }
 
 }

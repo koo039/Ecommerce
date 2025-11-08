@@ -1,10 +1,10 @@
 
 INSERT INTO users (first_name, last_name, username, email, phone, password_hash, created_at, updated_at, user_role,is_email_enabled,is_phone_enabled)
 VALUES
-    ( 'John', 'Doe', 'user1', 'user1@example.com', '+21360000001', 'hashedPassword1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0),
-    ( 'Jane', 'Smith', 'user2', 'user2@example.com', '+21360000002', 'hashedPassword2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0),
-    ( 'Ali', 'Karim', 'user3', 'user3@example.com', '+21360000003', 'hashedPassword3', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0),
-    ( 'Sara', 'Amar', 'user4', 'user4@example.com', '+21360000004', 'hashedPassword4', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0);
+    ( 'John', 'Doe', 'user1', 'user1@example.com', '+21360000001', 'hashedPassword1@A', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0),
+    ( 'Jane', 'Smith', 'user2', 'user2@example.com', '+21360000002', 'hashedPassword2@A', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0),
+    ( 'Ali', 'Karim', 'user3', 'user3@example.com', '+21360000003', 'hashedPassword3@A', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0),
+    ( 'Sara', 'Amar', 'user4', 'user4@example.com', '+21360000004', 'hashedPassword4@A', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0);
 
 INSERT INTO categories (category_name)
 VALUES

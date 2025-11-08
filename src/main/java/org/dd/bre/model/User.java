@@ -18,6 +18,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -78,7 +79,7 @@ public class User {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Address> addresses;
 
-    //@OneToMany(mappedBy = "user")
-    //private List<Order> orders;
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
 
 }

@@ -6,6 +6,7 @@ import org.dd.bre.Exception.UserNotFoundException;
 import org.dd.bre.Repo.OrderRepo;
 import org.dd.bre.Repo.UserRepo;
 import org.dd.bre.model.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 
@@ -15,8 +16,8 @@ public class UserService {
     private final UserRepo userRepo;
     private final OrderRepo orderRepo;
 
-    public UserProfileDto getUserProfile(Long userId) {
-        User user = userRepo.findById(userId).orElseThrow(()-> new UserNotFoundException("User Not Found"));
+    public UserProfileDto getUserProfile(UserDetails userDetails) {
+        User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
 
         UserProfileDto userProfileDto = new UserProfileDto();
         userProfileDto.setFirstName(user.getFirstName());
@@ -26,8 +27,8 @@ public class UserService {
 
         return userProfileDto;
     }
-    public UserProfileDto updateProfile(Long userId, UserProfileDto userProfileDto){
-        User user = userRepo.findById(userId).orElseThrow(()-> new UserNotFoundException("User Not Found"));
+    public UserProfileDto updateProfile(UserDetails userDetails, UserProfileDto userProfileDto){
+        User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
 
         user.setFirstName(userProfileDto.getFirstName());
         user.setLastName(userProfileDto.getLastName());

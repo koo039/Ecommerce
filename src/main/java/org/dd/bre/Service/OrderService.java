@@ -13,6 +13,7 @@ import org.dd.bre.model.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -60,8 +61,8 @@ public class OrderService {
         );
     }
 
-    public OrderPageResponse getOrdersHistory(Long userId, Pageable pageable) {
-        User user = userRepo.findById(userId).orElseThrow(()-> new UserNotFoundException("User Not Found"));
+    public OrderPageResponse getOrdersHistory(UserDetails userDetails, Pageable pageable) {
+        User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
         Page<Order> pageResult = orderRepo.findAllByUserId(user.getId(),pageable);
 
         List<OrderHistoryDto> dtos =  new ArrayList<>();
@@ -80,9 +81,9 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderHistoryDto createOrder(Long userId,PurchaseReq purchaseReq) {
+    public OrderHistoryDto createOrder(UserDetails userDetails, PurchaseReq purchaseReq) {
 
-        User user = userRepo.findById(userId).orElseThrow(()-> new UserNotFoundException("User Not Found"));
+        User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
 
         if (purchaseReq.getItems() == null || purchaseReq.getItems().isEmpty()) {
             throw new InvalidOrderException("Cannot create order with no items");
@@ -129,7 +130,7 @@ public class OrderService {
 
         orderRepo.save(order);
 
-        cartService.clearCart(userId);
+        cartService.clearCart(user.getId());
 
         return orderHistoryMapper.mapToOrderHistoryDTO(order);
     }

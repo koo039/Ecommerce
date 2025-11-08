@@ -10,6 +10,8 @@ import org.dd.bre.Service.UserService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,62 +26,56 @@ public class UserController {
     private final SettingService settingService;
 
     @GetMapping("/profile")
-    public ResponseEntity<UserProfileDto> getUserProfileHandler() {
-        Long userId = getAuthenticatedUserId();
-        return ResponseEntity.ok(userService.getUserProfile(userId));
+    public ResponseEntity<UserProfileDto> getUserProfileHandler(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(userService.getUserProfile(userDetails));
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<UserProfileDto> updateProfile(@Valid @RequestBody UserProfileDto user){
-        Long userId = getAuthenticatedUserId();
-        return ResponseEntity.ok().body(userService.updateProfile(userId,user));
+    public ResponseEntity<UserProfileDto> updateProfile(@Valid @RequestBody UserProfileDto user,
+                                                        @AuthenticationPrincipal UserDetails userDetails){
+        return ResponseEntity.ok().body(userService.updateProfile(userDetails,user));
     }
 
     @GetMapping("/orders")
     public ResponseEntity<OrderPageResponse> getOrdersHistoryHandler(@RequestParam(defaultValue = "0") int page,
-                                                                     @RequestParam(defaultValue = "5") int size) {
-        Long userId = getAuthenticatedUserId();
+                                                                     @RequestParam(defaultValue = "5") int size,
+                                                                     @AuthenticationPrincipal UserDetails userDetails) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(orderService.getOrdersHistory(userId,pageable));
+        return ResponseEntity.ok(orderService.getOrdersHistory(userDetails,pageable));
     }
 
     @GetMapping("/addresses")
-    public ResponseEntity<List<AddressResponse>> getAddressesOfUserHandler(){
-        Long userId = getAuthenticatedUserId();
-        return ResponseEntity.ok(addressService.getAddresses(userId));
+    public ResponseEntity<List<AddressResponse>> getAddressesOfUserHandler(@AuthenticationPrincipal UserDetails userDetails){
+        return ResponseEntity.ok(addressService.getAddresses(userDetails));
     }
 
     @DeleteMapping("/address/{id}")
-    public ResponseEntity<Void> deleteAddressHandler(@PathVariable Long id){
-        Long userId = getAuthenticatedUserId();
-        addressService.deleteAddress(userId,id);
+    public ResponseEntity<Void> deleteAddressHandler(@PathVariable Long id,
+                                                     @AuthenticationPrincipal UserDetails userDetails){
+        addressService.deleteAddress(userDetails,id);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/address")
-    public ResponseEntity<AddressResponse> addAddressHandler(@Valid @RequestBody AddressRequest addressRequest){
-        Long userId = getAuthenticatedUserId();
-        return ResponseEntity.ok(addressService.addAddress(userId,addressRequest));
+    public ResponseEntity<AddressResponse> addAddressHandler(@Valid @RequestBody AddressRequest addressRequest,
+                                                             @AuthenticationPrincipal UserDetails userDetails){
+        return ResponseEntity.ok(addressService.addAddress(userDetails,addressRequest));
     }
 
     @PutMapping("/address/{id}")
-    public ResponseEntity<AddressResponse> updateAddressHandler(@PathVariable Long id , @Valid @RequestBody AddressRequest addressRequest){
-        Long userId = getAuthenticatedUserId();
-        return ResponseEntity.ok(addressService.updateAddress(userId,id,addressRequest));
+    public ResponseEntity<AddressResponse> updateAddressHandler(@PathVariable Long id , @Valid @RequestBody AddressRequest addressRequest,
+                                                                @AuthenticationPrincipal UserDetails userDetails){
+        return ResponseEntity.ok(addressService.updateAddress(userDetails,id,addressRequest));
     }
 
     @GetMapping("/settings")
-    public ResponseEntity<SettingResponse> getSettingHandler(){
-        Long userId = getAuthenticatedUserId();
-        return ResponseEntity.ok(settingService.getSetting(userId));
+    public ResponseEntity<SettingResponse> getSettingHandler(@AuthenticationPrincipal UserDetails userDetails){
+        return ResponseEntity.ok(settingService.getSetting(userDetails));
     }
     @PutMapping("/settings")
-    public ResponseEntity<SettingResponse> updateSettingHandler(@RequestParam boolean isEmailEnabled,@RequestParam boolean isPhoneEnabled){
-        Long userId = getAuthenticatedUserId();
-        return ResponseEntity.ok(settingService.updateSetting(userId,isEmailEnabled,isPhoneEnabled));
+    public ResponseEntity<SettingResponse> updateSettingHandler(@RequestParam boolean isEmailEnabled,@RequestParam boolean isPhoneEnabled,
+                                                                @AuthenticationPrincipal UserDetails userDetails){
+        return ResponseEntity.ok(settingService.updateSetting(userDetails,isEmailEnabled,isPhoneEnabled));
     }
 
-    private Long getAuthenticatedUserId() {
-        return 1L;
-    }
 }
