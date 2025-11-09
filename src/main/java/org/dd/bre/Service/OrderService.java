@@ -1,5 +1,6 @@
 package org.dd.bre.Service;
 
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.dd.bre.Dto.*;
@@ -34,6 +35,7 @@ public class OrderService {
     private final VariantService variantService;
     private final ShippingAddressService shippingAddressService;
     private final CartService cartService;
+    private final EmailService emailService;
     private final int scale = 2;
     private final RoundingMode roundingMode = RoundingMode.HALF_UP;
     @Value("${app.order.free-shipping}")
@@ -81,7 +83,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderHistoryDto createOrder(UserDetails userDetails, PurchaseReq purchaseReq) {
+    public OrderHistoryDto createOrder(UserDetails userDetails, PurchaseReq purchaseReq) throws MessagingException {
 
         User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
 
@@ -131,11 +133,36 @@ public class OrderService {
         orderRepo.save(order);
 
         cartService.clearCart(user.getId());
+        try {
+            emailService.sendEmail(user.getEmail(),getEmailSubjectForOrder(),getEmailMessageForOrder());
+        }
+        catch (MessagingException e) {
+            throw new MessagingException("Unable to send email to " + user.getEmail(), e);
+        }
+
 
         return orderHistoryMapper.mapToOrderHistoryDTO(order);
     }
 
+    private String getEmailMessageForOrder() {
+        return """
+    <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
+        <h2 style="color: #28a745;">✅ Order Successful!</h2>
+        <p>Thank you for your purchase. Your order has been successfully placed and is now being processed.</p>
+        <p><strong>Order ID:</strong> #123456</p>
+        <p>We’ll send you an update when your order ships.</p>
+        <a href="/orders" style="display: inline-block; margin-top: 15px; 
+            padding: 10px 20px; background-color: #28a745; color: white; 
+            text-decoration: none; border-radius: 5px;">
+            View My Orders
+        </a>
+    </div>
+""";
+    }
 
+    private String getEmailSubjectForOrder() {
+        return "Order Confirmation - Thank You for Your Purchase!";
+    }
 
     private BigDecimal calculateTotalPrice(BigDecimal subTotal,BigDecimal taxAmount,BigDecimal shipping) {
         return subTotal.add(taxAmount).add(shipping).setScale(scale,roundingMode);

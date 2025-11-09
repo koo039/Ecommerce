@@ -1,5 +1,6 @@
 package org.dd.bre.Controller;
 
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.dd.bre.Dto.OrderHistoryDto;
@@ -8,10 +9,7 @@ import org.dd.bre.Service.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -22,7 +20,7 @@ public class OrderController {
 
     @PostMapping("/purchase")
     public OrderHistoryDto CreateOrder(@Valid @RequestBody PurchaseReq purchaseReq,
-                                       @AuthenticationPrincipal UserDetails userDetails){
+                                       @AuthenticationPrincipal UserDetails userDetails) throws MessagingException {
         return orderService.createOrder(userDetails,purchaseReq);
     }
 }
