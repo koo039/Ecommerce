@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/wishlist")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('CUSTOMER')")
+@PreAuthorize("hasAuthority('CUSTOMER')")
 public class WishListController {
 
     private final WishListService wishListService;

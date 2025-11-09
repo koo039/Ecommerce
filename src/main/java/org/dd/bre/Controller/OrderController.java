@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('CUSTOMER')")
+@PreAuthorize("hasAuthority('CUSTOMER')")
 public class OrderController {
     private final OrderService orderService;
 

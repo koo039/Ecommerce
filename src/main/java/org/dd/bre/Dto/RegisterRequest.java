@@ -26,15 +26,9 @@ public class RegisterRequest {
     )
     private String phone;
 
-    @Pattern(
-            regexp = "^\\+?[0-9]{7,15}$",
-            message = "Invalid phone number format"
-    )
+    @Pattern(regexp = "[A-Za-z0-9!@#$%^&*_]{8,15}", message = "Password must be 8-15 characters in length and can include A-Z, a-z, 0-9, or special characters !@#$%^&*_")
     private String password;
 
-    @Pattern(
-            regexp = "^\\+?[0-9]{7,15}$",
-            message = "Invalid phone number format"
-    )
+    @Pattern(regexp = "[A-Za-z0-9!@#$%^&*_]{8,15}", message = "Confirm password must match requirements")
     private String confirmPassword;
 }

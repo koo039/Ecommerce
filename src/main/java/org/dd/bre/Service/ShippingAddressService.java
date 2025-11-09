@@ -3,7 +3,9 @@ package org.dd.bre.Service;
 import lombok.RequiredArgsConstructor;
 import org.dd.bre.Dto.AddressRequest;
 import org.dd.bre.Dto.PurchaseReq;
+import org.dd.bre.Repo.AddressRepo;
 import org.dd.bre.Repo.ShippingAddressRepo;
+import org.dd.bre.model.Address;
 import org.dd.bre.model.ShippingAddress;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +15,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ShippingAddressService {
     private final ShippingAddressRepo shippingAddressRepo;
+    private final AddressRepo addressRepo;
 
     protected ShippingAddress getShippingAddress(PurchaseReq purchaseReq) {
-        AddressRequest address = purchaseReq.getAddress();
-
-        if(address == null)
-            throw new IllegalArgumentException("Address is required.");
+        Address address = addressRepo.findById(purchaseReq.getAddressId()).orElseThrow(()->new RuntimeException("Address not found"));
 
         Optional<ShippingAddress> existing = shippingAddressRepo.findMatchingAddress(
                 address.getAddressLine1(),
@@ -38,7 +38,7 @@ public class ShippingAddressService {
         return shippingAddressRepo.save(shippingAddress);
     }
 
-    private static ShippingAddress getShippingAddress(AddressRequest address) {
+    private static ShippingAddress getShippingAddress(Address address) {
         ShippingAddress shippingAddress = new ShippingAddress();
 
         shippingAddress.setCity(address.getCity());

@@ -46,10 +46,10 @@ public class User {
     @Column(nullable = false)
     private String phone;
 
-    @Column(name = "is_email_enabled",nullable = false)
+    @Column(name = "is_email_enabled",insertable = false)
     private Boolean isEmailEnabled = false;
 
-    @Column(name = "is_phone_enabled",nullable = false)
+    @Column(name = "is_phone_enabled",insertable = false)
     private Boolean isPhoneEnabled = false;
 
     @JsonIgnore

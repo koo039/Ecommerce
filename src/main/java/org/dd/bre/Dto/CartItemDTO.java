@@ -5,6 +5,7 @@ public record CartItemDTO (
         Long id,
         Integer quantity,
         String productName,
+        Long variantId,
         String imageUrl,
         BigDecimal price,
         String size,

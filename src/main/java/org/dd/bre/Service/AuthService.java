@@ -14,11 +14,14 @@ import org.dd.bre.Security.Service.CustomUserDetailsService;
 import org.dd.bre.model.Cart;
 import org.dd.bre.model.User;
 import org.dd.bre.model.UserRole;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -45,7 +48,7 @@ public class AuthService {
     }
 
     @Transactional
-    public String Register(RegisterRequest registerRequest) {
+    public ResponseEntity<?> Register(RegisterRequest registerRequest) {
 
         checkIfEmailExists(registerRequest.getEmail());
 
@@ -58,9 +61,11 @@ public class AuthService {
 
         User newUser = buildUser(registerRequest,UserRole.CUSTOMER);
 
+        initUserCart(newUser);
+
         userRepo.save(newUser);
 
-        return "user registered successfully";
+        return ResponseEntity.ok(Map.of("message", "user registered successfully"));
     }
 
     @Transactional
@@ -94,7 +99,6 @@ public class AuthService {
                 .phone(request.getPhone())
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
                 .user_role(role)
-                .cart(new Cart())
                 .build();
     }
 
@@ -116,5 +120,11 @@ public class AuthService {
         if (!oldPassword.equals(newPassword)) {
             throw new PasswordNotMatch("Passwords do not match");
         }
+    }
+    private void initUserCart(User user) {
+        Cart newCart = new Cart();
+        newCart.setUser(user);
+
+        user.setCart(newCart);
     }
 }
