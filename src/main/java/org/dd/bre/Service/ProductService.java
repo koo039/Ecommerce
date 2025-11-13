@@ -39,14 +39,14 @@ public class ProductService {
 
     protected ProductPageResponse getAllProductsByWishList(List<WishList> wishLists,Pageable pageable) {
         List<Long> in = wishLists.stream().map(WishList::getId).toList();
-        Page<Product> pageResult = productRepo.findAllByWishLists_IdIn(in,pageable);
+        Page<Long> pageResult = productRepo.findAllByWishLists_IdIn(in,pageable);
         return buildProductPageResponse(pageResult);
     }
 
     public ProductPageResponse getAllProductsByCategory(String categoryName,Pageable pageable, String sortBy, String direction) {
 
         Category category = categoryRepo.findByCategoryName(categoryName);
-        Page<Product> pageResult = productRepo.findAllByCategory(category, pageable);
+        Page<Long> pageResult = productRepo.findAllByCategory(category, pageable);
 
         if (category == null) {
             throw new ProductNotFoundException("Category not found: " + categoryName);
@@ -65,7 +65,7 @@ public class ProductService {
 
     }
     public ProductPageResponse getAllProducts(Pageable pageable, String sortBy, String direction) {
-        Page<Product> pageResult = productRepo.findAll(pageable);
+        Page<Long> pageResult = productRepo.findAllProducts(pageable);
 
         if("rate".equalsIgnoreCase(sortBy)) {
             pageResult = productRepo.findAllByHighRate(pageable);
@@ -73,16 +73,17 @@ public class ProductService {
 
         else if("price".equalsIgnoreCase(sortBy)) {
             Pageable page = sortProducts(pageable, sortBy, direction);
-            pageResult = productRepo.findAll(page);
+            pageResult = productRepo.findAllProducts(page);
         }
 
         return buildProductPageResponse(pageResult);
     }
 
-    public ProductPageResponse buildProductPageResponse(Page<Product> pageResult) {
+    public ProductPageResponse buildProductPageResponse(Page<Long> pageResult) {
         List<ProductDTO> dtos =  new ArrayList<>();
         if (!pageResult.isEmpty()) {
-            dtos = pageResult.getContent().stream()
+            List<Product> products = productRepo.findAllByIdIn(pageResult.getContent());
+            dtos = products.stream()
                     .map(productMapper::mapToProductDTO)
                     .toList();
         }

@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "products")
@@ -49,7 +50,7 @@ public class Product {
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductVariant>  productVariants;
+    private Set<ProductVariant> productVariants;
 
     @JsonIgnore
     @OneToMany(mappedBy = "product")

@@ -1,6 +1,7 @@
 package org.dd.bre.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.dd.bre.Dto.AddItemToCartDto;
 import org.dd.bre.Dto.CartDTO;
 import org.dd.bre.Dto.CartItemDTO;
@@ -18,7 +19,9 @@ import org.dd.bre.model.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CartService {
@@ -31,12 +34,12 @@ public class CartService {
     public int MAX_CART_ITEMS;
     private final UserRepo userRepo;
 
-
+    @Transactional(readOnly = true)
     public CartDTO getCart(UserDetails userDetails) {
 
         User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
 
-        Cart cart = cartRepo.findByUserId(user.getId());
+        Cart cart = cartRepo.findCartWithItemsAndProductsByUserId(user.getId());
 
         if (cart == null) {
             throw new CartNotFoundException("Cart not found");
@@ -49,7 +52,7 @@ public class CartService {
 
     public void clearCart(Long userId) {
 
-        Cart cart = cartRepo.findByUserId(userId);
+        Cart cart = cartRepo.findCartWithItemsAndProductsByUserId(userId);
 
         if (cart == null) {
             throw new CartNotFoundException("Cart not found");
@@ -99,7 +102,7 @@ public class CartService {
             throw new IllegalArgumentException("Quantity must be greater than 0");
         }
 
-        Cart cart = cartRepo.findByUserId(user.getId());
+        Cart cart = cartRepo.findCartWithItemsAndProductsByUserId(user.getId());
         if (cart == null) {
             throw new CartNotFoundException("Cart not found");
         }
@@ -108,7 +111,6 @@ public class CartService {
                 .orElseThrow(() -> new ProductVariantNotFoundException("Product variant not found"));
 
         CartItem existingItem = cartItemRepo.findByCartIdAndProductVariantId(cart.getId(), variant.getId());
-
         if (existingItem != null) {
             int newQuantity = existingItem.getQuantity() + req.getQuantity();
 

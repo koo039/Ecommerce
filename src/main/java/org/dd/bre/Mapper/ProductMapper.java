@@ -7,6 +7,8 @@ import org.dd.bre.model.Image;
 import org.dd.bre.model.Product;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+
 @Component
 @RequiredArgsConstructor
 public class ProductMapper {
@@ -15,7 +17,7 @@ public class ProductMapper {
     public ProductDTO mapToProductDTO(Product product) {
 
         String imageUrl = product.getProductVariants().stream()
-                .flatMap(variant -> variant.getImages().stream())
+                .flatMap(variant -> new ArrayList<>(variant.getImages()).stream())
                 .map(Image::getUrl)
                 .findFirst()
                 .orElse("default-image.png");

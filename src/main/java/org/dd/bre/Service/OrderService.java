@@ -19,9 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,25 +63,31 @@ public class OrderService {
 
     public OrderPageResponse getOrdersHistory(UserDetails userDetails, Pageable pageable) {
         User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
-        Page<Order> pageResult = orderRepo.findAllByUserId(user.getId(),pageable);
+        Page<Long> pageIds = orderRepo.findPageOfIds(user.getId(), pageable);
 
-        List<OrderHistoryDto> dtos =  new ArrayList<>();
-        if(!pageResult.isEmpty()){
-            dtos = pageResult.stream().map(orderHistoryMapper::mapToOrderHistoryDTO).toList();
+        List<Order> orders = Collections.emptyList();
+        if (!pageIds.isEmpty()) {
+            orders = orderRepo.findAllByIdIn(pageIds.getContent());
         }
+
+        List<OrderHistoryDto> dtos = orders.stream()
+                .map(orderHistoryMapper::mapToOrderHistoryDTO)
+                .toList();
+
         return new OrderPageResponse(
                 dtos,
-                pageResult.getNumber(),
-                pageResult.getSize(),
-                pageResult.getTotalElements(),
-                pageResult.getTotalPages(),
-                pageResult.hasNext()
+                pageIds.getNumber(),
+                pageIds.getSize(),
+                pageIds.getTotalElements(),
+                pageIds.getTotalPages(),
+                pageIds.hasNext()
         );
+
 
     }
 
     @Transactional
-    public OrderHistoryDto createOrder(UserDetails userDetails, PurchaseReq purchaseReq) throws MessagingException {
+    public OrderHistoryDto createOrder(UserDetails userDetails, PurchaseReq purchaseReq) throws MessagingException{
 
         User user = userRepo.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
 
@@ -122,9 +126,9 @@ public class OrderService {
         order.setTotalPrice(totalPrice);
         order.setShippingAddress(shippingAddress);
 
-        List<OrderItem> orderItems = purchaseReq.getItems().stream()
+        Set<OrderItem> orderItems = purchaseReq.getItems().stream()
                 .map(item -> orderItemService.createOrderItem(order, item))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         order.setItems(orderItems);
 

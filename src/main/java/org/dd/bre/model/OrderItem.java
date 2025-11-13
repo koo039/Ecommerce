@@ -1,13 +1,16 @@
 package org.dd.bre.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_items")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderItem {
@@ -23,12 +26,13 @@ public class OrderItem {
     private BigDecimal price;
 
     @ManyToOne
+    @JsonIgnore
     @JsonBackReference
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonManagedReference
     @JoinColumn(name = "variant_id", nullable = false)
     private ProductVariant productVariant;
 }

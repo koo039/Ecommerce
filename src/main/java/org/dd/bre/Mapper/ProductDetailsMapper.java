@@ -5,6 +5,9 @@ import org.dd.bre.model.Image;
 import org.dd.bre.model.Product;
 import org.dd.bre.model.ProductVariant;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -26,6 +29,10 @@ public class ProductDetailsMapper {
 
     public ProductVariantDetailsDto mapToProductVariantDTO(ProductVariant productVariant) {
 
+        List<ImageDto> images = new ArrayList<>();
+        for (Image img : productVariant.getImages()) {
+            images.add(mapToImage(img));
+        }
 
         return new ProductVariantDetailsDto(
                 productVariant.getId(),
@@ -34,9 +41,7 @@ public class ProductDetailsMapper {
                 productVariant.getColor(),
                 productVariant.getStockQty(),
                 productVariant.getStatus(),
-                productVariant.getImages().stream()
-                        .map(this::mapToImage)
-                        .collect(Collectors.toList())
+                images
 
         );
     }
