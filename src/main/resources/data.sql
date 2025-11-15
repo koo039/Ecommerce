@@ -1,11 +1,3 @@
-
-INSERT INTO users (first_name, last_name, username, email, phone, password_hash, created_at, updated_at, user_role,is_email_enabled,is_phone_enabled)
-VALUES
-    ( 'John', 'Doe', 'user1', 'user1@example.com', '+21360000001', 'hashedPassword1@A', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0),
-    ( 'Jane', 'Smith', 'user2', 'user2@example.com', '+21360000002', 'hashedPassword2@A', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0),
-    ( 'Ali', 'Karim', 'user3', 'user3@example.com', '+21360000003', 'hashedPassword3@A', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0),
-    ( 'Sara', 'Amar', 'user4', 'user4@example.com', '+21360000004', 'hashedPassword4@A', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'CUSTOMER',0,0);
-
 INSERT INTO categories (category_name)
 VALUES
     ('Dresses'),
@@ -157,71 +149,9 @@ VALUES
     ('HMK-002-STD-BLUE', 'STD', 'BLUE', 35, 20);
 
 
-INSERT INTO carts (created_at,updated_at,user_id) VALUES
-    (NOW(),NOW(),1),
-    (NOW(),NOW(),2),
-    (NOW(),NOW(),3),
-    (NOW(),NOW(),4);-- Cart for User 1
 
 
-INSERT INTO cart_items (quantity, cart_id, variant_id) VALUES
-                                                           -- Cart 1 (User 1’s active cart)
-   (2, 1, 1),  -- 2x Summer Dress (variant 1)
-   (1, 1, 6),  -- 1x Running Shoes (variant 6)
 
-   -- Cart 2 (User 2’s cart)
-   (3, 2, 7),  -- 3x Running Shoes (variant 7)
-   (1, 2, 11), -- 1x Smartwatch (variant 11)
-
-   -- Cart 3 (User 3’s cart)
-   (1, 3, 9),  -- 1x Leather Boots (variant 9)
-   (2, 3, 15), -- 2x Backpack (variant 15)
-
-   -- Cart 4 (User 1’s old cart)
-   (1, 4, 4),  -- 1x Evening Gown (variant 4)
-   (2, 4, 2); -- 2x Backpack (variant 16)
-
-
-INSERT INTO wishlists (created_at, updated_at, user_id, product_id) VALUES
-                                                                        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 1),
-                                                                        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 5),
-                                                                        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2, 3),
-                                                                        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3, 1),
-                                                                        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3, 4);
-
-INSERT INTO addresses (
-    user_id, address_line1, city, state, country, postal_code, phone_number, label, created_at, updated_at
-)
-VALUES
-    (1, '123 Main Street', 'New York', 'NY', 'USA', '10001', '+1234567890', 'Home', NOW(), NOW()),
-    (1, '500 Market St', 'San Francisco', 'CA', 'USA', '94105', '+1234567000', 'Work', NOW(), NOW());
-
-INSERT INTO shipping_addresses (
-     address_line1, city, state, country, postal_code, phone_number, label, created_at, updated_at
-)
-VALUES
-    ( '123 Main Street', 'New York', 'NY', 'USA', '10001', '+1234567890', 'Home', NOW(), NOW()),
-    ( '500 Market St', 'San Francisco', 'CA', 'USA', '94105', '+1234567000', 'Work', NOW(), NOW());
-
-
--- Corrected orders table (totals now match item subtotals)
-INSERT INTO orders (order_number,total_price,shipping_price, created_at, updated_at, user_id, order_status,shipping_address_id)
-VALUES
-    ('1',199.96,10, NOW(), NOW(), 1, 'PENDING',1), -- 3 items × 39.99 = 119.97 (PENDING)
-    ('2',159.96,10, NOW(), NOW(), 1, 'PROCESSING',2), -- 4 items × 39.99 = 159.96 (PROCESSING)
-    ('3',399.95,10, NOW(), NOW(), 1, 'SHIPPED',1), -- 5 items × 79.99 = 399.95 (SHIPPED)
-    ('4',79.99,10, NOW(), NOW(), 1, 'DELIVERED',2),  -- 1 item × 79.99 = 79.99 (DELIVERED)
-    ('5',39.99,10, NOW(), NOW(), 1, 'CANCELLED',1);  -- 1 item × 39.99 = 39.99 (CANCELLED)
-
--- Corrected order_items table (prices consistent with variant prices)
-INSERT INTO order_items (quantity, price, order_id, variant_id)
-VALUES
-    (3, 119.97, 1, 1),  -- 3 × 39.99 = 119.97
-    (4, 159.96, 2, 2),  -- 4 × 39.99 = 159.96
-    (1, 79.99, 1, 4),
-    (5, 399.95, 3, 4),  -- 5 × 79.99 = 399.95
-    (1, 79.99, 4, 4),  -- 1 × 79.99 = 79.99
-    (1, 39.99, 5, 3);   -- 1 × 39.99 = 39.99
 
 
 
@@ -266,37 +196,6 @@ INSERT INTO images (url, variant_id) VALUES
 ('https://images.unsplash.com/photo-1743427158645-f89ff519b508?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8UHJheWVyJTIwTWF0fGVufDB8fDB8fHww',43);
 
 
-INSERT INTO reviews (user_id,comment, rate, created_at, updated_at, product_id) VALUES
--- Reviews for Summer Dress (product_id = 1)
-(1,'Great quality, fits perfectly!', 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1),
-(2,'Color is nice but size runs small.', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1),
-(3,'Not bad, but delivery was late.', 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1),
-
--- Reviews for Evening Gown (product_id = 2)
-(2,'Excellent value for the price!', 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2),
-(2,'Material feels cheap, disappointed.', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2),
-(2,'Looks beautiful, perfect for the event.', 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2),
-
--- Reviews for Running Shoes (product_id = 3)
-(3,'Very comfortable for jogging.', 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3),
-(3,'Sole started wearing out quickly.', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3),
-(3,'Breathable and lightweight, love them.', 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3),
-
--- Reviews for Leather Boots (product_id = 4)
-(4,'Excellent craftsmanship, worth the price.', 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4),
-(4,'A bit tight at first but stretches out.', 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4),
-
--- Reviews for Smartwatch (product_id = 5)
-(1,'Amazing features, battery lasts long.', 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 5),
-(1,'Difficult to connect with phone at first.', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 5),
-
--- Reviews for Backpack (product_id = 7)
-(2,'Spacious and durable, great for travel.', 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 7),
-(2,'Zipper broke after a month, disappointed.', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 7),
-
--- Reviews for Laptop (product_id = 15)
-(3,'Super fast and lightweight, perfect for work.', 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 15),
-(4,'Overheats a bit when gaming.', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 15);
 UPDATE product_variants
 SET status = 'INSTOCK'
 WHERE status IS NULL;

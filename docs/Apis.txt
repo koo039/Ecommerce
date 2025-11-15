@@ -1,0 +1,125 @@
+🔐 AUTH APIs
+1. Register User
+
+POST /api/auth/register
+→ Creates a new normal user.
+Body: RegisterRequest (name, email, username, phone, password).
+
+2. Login User
+
+POST /api/auth/login
+→ Login and receive JWT token.
+Body: LoginRequest.
+
+3. Admin Login
+
+POST /api/auth/admin/login
+→ Admin login. Same body as user login.
+
+4. Admin Register
+
+POST /api/auth/admin/create
+→ Creates a new admin account.
+
+👤 USER APIs
+Profile
+1. Get User Profile
+
+GET /api/users/profile
+→ Returns logged-in user profile.
+
+2. Update User Profile
+
+PUT /api/users/profile
+→ Update user profile.
+Body: UserProfileDto.
+
+User Settings
+3. Get Notification Settings
+
+GET /api/users/settings
+
+4. Update Notification Settings
+
+PUT /api/users/settings?isEmailEnabled=...&isPhoneEnabled=...
+
+User Addresses
+5. Add Address
+
+POST /api/users/address
+Body: AddressRequest.
+
+6. Update Address
+
+PUT /api/users/address/{id}
+Body: AddressRequest.
+
+7. Delete Address
+
+DELETE /api/users/address/{id}
+
+8. Get All User Addresses
+
+GET /api/users/addresses
+
+User Orders
+9. Get User Order History
+
+GET /api/users/orders?page=&size=
+
+❤️ WISHLIST APIs
+1. Toggle Product in Wishlist
+
+PUT /api/wishlist/toggle/{productId}
+→ Add/remove product from wishlist.
+
+2. Get Wishlist
+
+GET /api/wishlist?page=&size=
+
+🛒 CART APIs
+1. Get My Cart
+
+GET /api/carts/me
+
+2. Add Item to Cart
+
+POST /api/carts/items
+Body: AddItemToCartDto.
+
+3. Update Item Quantity
+
+**PUT /api/carts/items/{itemId}** Body: UpdateItemQuantityDto`.
+
+4. Delete Item
+
+DELETE /api/carts/items/{itemId}`
+
+5. Get Cart Summary Before Checkout
+
+POST /api/carts/summary
+Body: list of PurchaseItem.
+
+📦 ORDER APIs
+Place an Order
+
+POST /api/orders/purchase
+Body: PurchaseReq (addressId, payment, items).
+
+🛍️ PRODUCT APIs
+1. Get All Products
+
+GET /api/products?page=&size=&sortBy=&direction=
+
+2. Get Product by Name
+
+GET /api/products/{productName}
+
+3. Get Products by Category
+
+GET /api/products/category?categoryName=...
+
+🏷️ CATEGORY APIs
+Get All Categories
+
+GET /api/categories
